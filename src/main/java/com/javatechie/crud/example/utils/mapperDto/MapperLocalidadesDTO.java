@@ -25,13 +25,13 @@ public class MapperLocalidadesDTO {
     public LocalidadConsultaDTO mapperActivoinactivo(Localidad entity) throws Exception {
         try {
             LocalidadConsultaDTO dto = LocalidadConsultaDTO.builder()
-                    .provincia(entity.getProvincia().getDescriptionProvincia())
-                    .localidad(entity.getDescripcionLocalidad())
+                    .provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
+                    .localidad(entity.getDescripcionLocalidad().toUpperCase())
                     .build();
             if (entity.getFechaBaja() == null && entity.getHoraBaja() == null) {
-                dto.setActivo("si");
+                dto.setActivo("SI");
             } else {
-                dto.setActivo("no");
+                dto.setActivo("NO");
             }
             return dto;
         } catch (Exception e) {

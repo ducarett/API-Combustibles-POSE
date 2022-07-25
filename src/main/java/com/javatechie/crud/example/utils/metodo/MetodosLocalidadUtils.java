@@ -16,6 +16,7 @@ public class MetodosLocalidadUtils {
     /**
      * se hardcodeo el orden alfabetico de las provincias y se dividde en listas separadas a cada una, luego ordenamos alfabeticamente las localidades de cada provincia y se termina
      * unificando las listas.
+     *
      * @param entities
      * @return
      * @throws Exception
@@ -34,7 +35,6 @@ public class MetodosLocalidadUtils {
             prov = entities.stream()
                     .filter(localidad -> localidad.getProvincia().getDescriptionProvincia().equals(aux))
                     .collect(Collectors.toList());
-
             if (!prov.isEmpty()) {
                 listProvincias.add(localidadAlfabeticamente(prov));
             }
@@ -44,12 +44,15 @@ public class MetodosLocalidadUtils {
 
     /**
      * ordena alfabeticamente las localidades de una lista
+     *
      * @param entities
      * @return
      */
     public List<Localidad> localidadAlfabeticamente(List<Localidad> entities) {
-        return entities.stream()
+        return  entities.stream()
                 .sorted(Comparator.comparing(e -> e.getDescripcionLocalidad()))
+                .peek(e -> e.setDescripcionLocalidad(e.getDescripcionLocalidad().toUpperCase()))
                 .collect(Collectors.toList());
+
     }
 }

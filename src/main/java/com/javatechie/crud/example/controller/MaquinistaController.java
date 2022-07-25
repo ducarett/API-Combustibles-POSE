@@ -6,6 +6,10 @@ import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.service.Impl.MaquinistaServiceImpl;
 import com.javatechie.crud.example.utils.mapperDto.MapperMaquinistasDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,9 +88,16 @@ public class MaquinistaController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<?> getUsuariosActivos() {
+   /* public ResponseEntity<?> getUsuariosActivos( @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                                 @RequestParam(value = "size", defaultValue = "1", required = false) Integer size,
+                                                 @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction,
+                                                 @RequestParam(value = "sort", defaultValue = "id", required = false) String sortProperty) {
+
+    */
+    public ResponseEntity<?> getUsuariosActivos( Pageable pageable) {
         try {
-            List<Maquinista> maquinistas = maquinistaServiceImpl.listActivos();
+            //Pageable pageable = PageRequest.of(page, size, direction, sortProperty);
+            Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
             return ResponseEntity.status(HttpStatus.OK).body(mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistas));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
@@ -96,7 +107,7 @@ public class MaquinistaController {
     @GetMapping("/nombre")
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre.toUpperCase()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
@@ -105,7 +116,7 @@ public class MaquinistaController {
     @GetMapping("/apellido")
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido.toUpperCase()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }

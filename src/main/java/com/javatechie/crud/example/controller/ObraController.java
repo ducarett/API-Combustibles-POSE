@@ -97,7 +97,7 @@ public class ObraController {
     @GetMapping("/search/descripcion")
     public List<ObrasActivasDTO> searchForDescription(@RequestParam String descripcion) throws Exception {
         try {
-            return obraServiceImpl.listDescripcion(descripcion);
+            return obraServiceImpl.listDescripcion(descripcion.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -113,7 +113,7 @@ public class ObraController {
     @GetMapping("/search/provincia")
     public List<ObrasActivasDTO> searchForProvince(@RequestParam String provincia) throws Exception {
         try {
-            return obraServiceImpl.listProvincia(provincia);
+            return obraServiceImpl.listProvincia(provincia.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -129,7 +129,7 @@ public class ObraController {
     @GetMapping("/search/localidad")
     public List<ObrasActivasDTO> searchForLocalidad(@RequestParam String localidad) throws Exception {
         try {
-            return obraServiceImpl.listLocalidad(localidad);
+            return obraServiceImpl.listLocalidad(localidad.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -145,7 +145,7 @@ public class ObraController {
     @GetMapping("/search/gerente")
     public List<ObrasActivasDTO> searchForGerente(@RequestParam String gerente) throws Exception {
         try {
-            return obraServiceImpl.listGerente(gerente);
+            return obraServiceImpl.listGerente(gerente.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -161,7 +161,7 @@ public class ObraController {
     @GetMapping("/search/jefe")
     public List<ObrasActivasDTO> searchForJefe(@RequestParam String jefe) throws Exception {
         try {
-            return obraServiceImpl.listJefe(jefe);
+            return obraServiceImpl.listJefe(jefe.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -177,7 +177,7 @@ public class ObraController {
     @GetMapping("/search/administrativo")
     public List<ObrasActivasDTO> searchForAdministrativo(@RequestParam String administrativo) throws Exception {
         try {
-            return obraServiceImpl.listAdministrativo(administrativo);
+            return obraServiceImpl.listAdministrativo(administrativo.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

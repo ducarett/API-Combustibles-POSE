@@ -19,7 +19,6 @@ import java.util.List;
 public class LocalidadController {
     @Autowired
     private LocalidadServiceImpl localidadServiceImpl;
-
     @Autowired
     private MapperLocalidadesDTO mapperLocalidadesDTO;
     @Autowired

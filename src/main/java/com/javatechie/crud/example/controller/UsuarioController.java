@@ -8,6 +8,8 @@ import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -69,6 +71,7 @@ public class UsuarioController {
 
     /**
      * retorna una lista de dtos con el campo activo en si o no.
+     *
      * @return
      * @throws Exception
      */
@@ -80,6 +83,7 @@ public class UsuarioController {
             throw new Exception(e.getMessage());
         }
     }
+
     /**
      * Retorna un User segun el ID.
      *
@@ -104,9 +108,9 @@ public class UsuarioController {
      */
     // @Secured(("ADMINISTRADOR"))
     @PostMapping("/create")
-    public ResponseEntity<?> createUsuario(@RequestBody Usuario entity) { // ver de mejorar esto
+    public ResponseEntity<?> createUsuario(@RequestBody Usuario entity) {
         try {
-            metodosUsuariosUtils.comprobarUserNameRepetido(entity.getLogin());
+            entity.setLogin(metodosUsuariosUtils.comprobarUserNameRepetido(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido())));
             entity.setPassword(BCrypt.hashpw(entity.getPassword(), BCrypt.gensalt()));
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.save(completeCamposUsuarios.usuarioCamposAlta(entity)));
         } catch (Exception e) {
@@ -117,6 +121,7 @@ public class UsuarioController {
     /**
      * Modifica la entidad User, antes de eso comprueba que los campos celular mail o legajo no esten repetidos.
      * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
+     *
      * @param id
      * @param entity
      * @return
@@ -125,8 +130,8 @@ public class UsuarioController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario entity) { // ver de mejorar esto
         try {
-            if (!metodosUsuariosUtils.comprobarCampos(entity,id)) {
-                entity.setLogin(userServiceImpl.crearUserName(entity.getNombre(),entity.getApellido()));
+            if (!metodosUsuariosUtils.comprobarCampos(entity, id)) {
+                entity.setLogin(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido()));
                 return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"uno de los campos ya existe\"}");
@@ -161,7 +166,7 @@ public class UsuarioController {
     @GetMapping("/ver")
     public String getUserLogueado(Authentication auth) throws Exception {
         try {
-            String user = auth.getName();
+            String user = auth.getName().toUpperCase();
             return user;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -170,6 +175,7 @@ public class UsuarioController {
 
     /**
      * busca usuarios por nombre.
+     *
      * @param name
      * @return
      * @throws Exception
@@ -177,7 +183,7 @@ public class UsuarioController {
     @GetMapping("/search/nombre")
     public List<UserDTO> searchForNombre(@RequestParam String name) throws Exception {
         try {
-            return userServiceImpl.listarPorNombre(name);
+            return userServiceImpl.listarPorNombre(name.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -185,6 +191,7 @@ public class UsuarioController {
 
     /**
      * busca usuarios por apellido.
+     *
      * @param lastName
      * @return
      * @throws Exception
@@ -192,7 +199,7 @@ public class UsuarioController {
     @GetMapping("/search/apellido")
     public List<UserDTO> searchForApellido(@RequestParam String lastName) throws Exception {
         try {
-            return userServiceImpl.listarPorApellido(lastName);
+            return userServiceImpl.listarPorApellido(lastName.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -200,6 +207,7 @@ public class UsuarioController {
 
     /**
      * busca usuarios por cargo.
+     *
      * @param position
      * @return
      * @throws Exception
@@ -215,6 +223,7 @@ public class UsuarioController {
 
     /**
      * busca usuarios por username(login).
+     *
      * @param userName
      * @return
      * @throws Exception
@@ -222,7 +231,7 @@ public class UsuarioController {
     @GetMapping("/search/login")
     public UserDTO searchForLogin(@RequestParam String userName) throws Exception {
         try {
-            return userServiceImpl.buscarPorLogin(userName);
+            return userServiceImpl.buscarPorLogin(userName.toUpperCase());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -230,14 +239,15 @@ public class UsuarioController {
 
     /**
      * busca usuarios por legajo.
-     * @param file
+     *
+     * @param legajo
      * @return
      * @throws Exception
      */
     @GetMapping("/search/legajo")
-    public List<UserDTO> searchForlegajo(@RequestParam Integer file) throws Exception {
+    public List<UserDTO> searchForlegajo(@RequestParam Integer legajo) throws Exception {
         try {
-            return userServiceImpl.listarPorLegajo(file);
+            return userServiceImpl.listarPorLegajo(legajo);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -245,32 +255,31 @@ public class UsuarioController {
 
     /**
      * cambia la clave de usuario y lo persiste y lo retorna.
+     *
      * @param pass
-     * @param passConfirmacion
+     * @param newPass
+     * @param newPassConf
      * @param id
      * @return
      * @throws Exception
      */
     @PutMapping("/updatePass")
-    public Usuario updatePassword(@RequestParam String pass,@RequestParam String passConfirmacion,@RequestParam Integer id) throws Exception{
+    public Usuario updatePassword(@RequestParam String pass, @RequestParam String newPassConf, @RequestParam Integer id, @RequestParam String newPass) throws Exception {
         try {
-            if (pass.equals(passConfirmacion)) {
-                return metodosUsuariosUtils.cambiarClave(pass, id);
-            }else{
-                throw new Exception();
-            }
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
+            return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage() + ". Error al actualizar password");
         }
     }
 
     /**
      * retorna una lista de gerentes con nombre y apellido ordenados alfabeticamente.
+     *
      * @return
      * @throws Exception
      */
     @GetMapping("/gerentes")
-    public List<String> listGerentes() throws Exception{
+    public List<String> listGerentes() throws Exception {
         try {
             return userServiceImpl.listaGerentes();
         } catch (Exception e) {
@@ -280,11 +289,12 @@ public class UsuarioController {
 
     /**
      * retorna una lista de jefes con nombre y apellido ordenados alfabeticamente.
+     *
      * @return
      * @throws Exception
      */
     @GetMapping("/jefes")
-    public List<String> listJefes() throws Exception{
+    public List<String> listJefes() throws Exception {
         try {
             return userServiceImpl.listaJefes();
         } catch (Exception e) {
@@ -294,11 +304,12 @@ public class UsuarioController {
 
     /**
      * retorna una lista de administrativos rodenados alfabeticamente.
+     *
      * @return
      * @throws Exception
      */
     @GetMapping("/administrativos")
-    public List<String> listAdministrativos() throws Exception{
+    public List<String> listAdministrativos() throws Exception {
         try {
             return userServiceImpl.listaAdministrativos();
         } catch (Exception e) {

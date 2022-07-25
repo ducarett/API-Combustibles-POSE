@@ -24,6 +24,7 @@ public class CompleteCamposLocalidad {
             Usuario usuarioMod = Usuario.builder()
                     .usuarioId(1).build();
             entity.setUsuarioMod(usuarioMod);
+            entity.setDescripcionLocalidad(entity.getDescripcionLocalidad().toUpperCase());
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -41,10 +42,11 @@ public class CompleteCamposLocalidad {
         try {
             entity.setFechaAlta(LocalDate.now());
             entity.setHoraAlta(LocalDateTime.now());
+            entity.setDescripcionLocalidad(entity.getDescripcionLocalidad().toUpperCase());
             Usuario usuarioAlta = Usuario.builder()
                     .usuarioId(1)
-                    .apellido("Schwarz")
-                    .nombre("sDavid").build();
+                    .apellido("Schwarz".toUpperCase())
+                    .nombre("sDavid".toUpperCase()).build();
             entity.setUsuarioAlta(usuarioAlta);
             return entity;
         } catch (Exception e) {

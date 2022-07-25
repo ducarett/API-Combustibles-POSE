@@ -52,6 +52,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
                     .filter(provincia -> provincia.getFechaBaja() == null)
                     .sorted(Comparator.comparing(e -> e.getDescripcionLocalidad()))
                     .map(e -> e.getDescripcionLocalidad())
+                    .map(String::toUpperCase)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -92,7 +93,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     public String buscarPorId(Integer id) throws Exception {
         try {
             Localidad localidad = findById(id);
-            return localidad.getDescripcionLocalidad();
+            return localidad.getDescripcionLocalidad().toUpperCase();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

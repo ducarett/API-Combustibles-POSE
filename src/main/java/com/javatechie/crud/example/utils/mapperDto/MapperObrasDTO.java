@@ -40,12 +40,12 @@ public class MapperObrasDTO {
         try {
             ObrasActivasDTO dto = ObrasActivasDTO.builder() // ver si anda
                     .obraId(entity.getObraId())
-                    .descripcion(entity.getDescripcion())
-                    .Provincia(entity.getProvincia().getDescriptionProvincia())
-                    .Localidad(entity.getLocalidad().getDescripcionLocalidad())
-                    .gerente(entity.getGerente().getApellido().concat(" " + entity.getGerente().getApellido()))
-                    .jefe(entity.getJefe().getApellido().concat(" " + entity.getJefe().getApellido()))
-                    .administrativo(entity.getAdmin().getApellido().concat(" " + entity.getAdmin().getApellido()))
+                    .descripcion(entity.getDescripcion().toUpperCase())
+                    .Provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
+                    .Localidad(entity.getLocalidad().getDescripcionLocalidad().toUpperCase())
+                    .gerente(entity.getGerente().getApellido().toUpperCase().concat(" " + entity.getGerente().getNombre().toUpperCase()))
+                    .jefe(entity.getJefe().getApellido().toUpperCase().concat(" " + entity.getJefe().getNombre().toUpperCase()))
+                    .administrativo(entity.getAdmin().getApellido().toUpperCase().concat(" " + entity.getAdmin().getNombre().toUpperCase()))
                     .build();
             return dto;
         } catch (Exception e) {

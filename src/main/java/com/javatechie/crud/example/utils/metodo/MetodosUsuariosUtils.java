@@ -3,7 +3,10 @@ package com.javatechie.crud.example.utils.metodo;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.UsuarioRepository;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class MetodosUsuariosUtils {
 
@@ -44,14 +47,23 @@ public class MetodosUsuariosUtils {
         }
     }
 
-    public Usuario cambiarClave(String pass, Integer id) throws Exception {
+    public Usuario cambiarClave(String pass,String newPass,String newPassConf, Integer id) throws Exception {
         try {
             Usuario user = usuarioServiceImpl.findById(id);
-            user.setPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
-            user.setFechaMod(LocalDate.now());
-            user.setHoraMod(LocalDateTime.now());
-            usuarioRepository.save(user);
-            return user;
+            if (!BCrypt.checkpw(pass, user.getPassword())) {
+                if (newPass.equals(newPassConf)) {
+                    user.setPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
+                    user.setFechaMod(LocalDate.now());
+                    user.setHoraMod(LocalDateTime.now());
+                    usuarioRepository.save(user);
+                    log.info("Se cambio la clave con exito");
+                    return user;
+                }else{
+                    throw new Exception("Passwords no coinciden");
+                }
+            }else{
+                throw new Exception("Password incorrecta");
+            }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -61,6 +73,7 @@ public class MetodosUsuariosUtils {
         return entities.stream()
                 .sorted(Comparator.comparing(e -> e.getApellido().concat(" " + e.getNombre())))
                 .map(e -> e.getNombre().concat(" " + e.getApellido()))
+                .map(String::toUpperCase)
                 .collect(Collectors.toList());
     }
 
@@ -73,32 +86,53 @@ public class MetodosUsuariosUtils {
      */
     public String comprobarUserNameRepetido(String userName) throws Exception {
         try {
-            String a = "";
-            String b = "";
-            String newUserName;
-            int contador = 0;
-            boolean existe = true;
-            char[] nameA = userName.toCharArray();
-            for (char aux : nameA) {
-                if (Character.isLetter(aux)) {
-                    a += aux;
-                } else if (Character.isDigit(aux)) {
-                    b += aux;
-                }
-            }
-            newUserName = a.concat(b);
-            do {
-                if (usuarioRepository.findByLogin(newUserName) != null) {
-                    contador++;
-                    newUserName = a.concat(b + contador);
-                } else {
-                    existe = false;
-                }
-            } while (existe);
-            return newUserName;
+            return verificarUserName(userName);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    /**
+     * SEPARA EL USERNAME EN LETRAS Y NUMEROS
+     * @param userName
+     * @return
+     */
+    private String verificarUserName(String userName) {
+        String a = "";
+        String b = "";
+        String newUserName;
+
+        char[] nameA = userName.toCharArray();
+        for (char aux : nameA) {
+            if (Character.isLetter(aux)) {
+                a += aux;
+            } else if (Character.isDigit(aux)) {
+                b += aux;
+            }
+        }
+        newUserName = a.concat(b);
+        return existUserName(newUserName, a, b);
+    }
+
+    /**
+     * COMPRUEBA QUE EL USERNAME NO EXISTA Y EN EL CASO QUE SI LE CONCATENA UN NUMERO O LE SUMA PARA DISCRIMINARLO
+     * @param userName
+     * @param user
+     * @param numero
+     * @return
+     */
+    private String existUserName(String userName, String user, String numero) {
+        int contador = 0;
+        boolean existe = true;
+        do {
+            if (usuarioRepository.findByLogin(userName) != null) {
+                contador++;
+                userName = user.concat(numero + contador);
+            } else {
+                existe = false;
+            }
+        } while (existe);
+        return userName;
     }
 
 }

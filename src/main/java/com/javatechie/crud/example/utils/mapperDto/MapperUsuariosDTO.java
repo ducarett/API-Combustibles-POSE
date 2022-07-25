@@ -3,6 +3,7 @@ package com.javatechie.crud.example.utils.mapperDto;
 import com.javatechie.crud.example.dto.*;
 import com.javatechie.crud.example.entity.Usuario;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

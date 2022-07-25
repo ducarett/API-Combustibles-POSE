@@ -28,11 +28,6 @@ public class CompleteCamposUsuarios {
         }
     }
 
-
-
-
-
-
     /**
      * setea los campos del alta de localidad con datos del sistema.
      *
@@ -44,7 +39,9 @@ public class CompleteCamposUsuarios {
         try {
             entity.setFechaAlta(LocalDate.now());
             entity.setHoraAlta(LocalDateTime.now());
-            entity.setUsuarioAlta(usuarioServiceImpl.findById(1).getUsuarioId());
+            entity.setNombre(entity.getNombre().toUpperCase());
+            entity.setApellido(entity.getApellido().toUpperCase());
+            entity.setUsuarioAlta(usuarioServiceImpl.findById(1).getUsuarioId());//esta hardcodeado
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -58,8 +55,8 @@ public class CompleteCamposUsuarios {
             entity.setHoraBaja(LocalDateTime.now());
             Usuario usuarioBaja = Usuario.builder()
                     .usuarioId(1)
-                    .apellido("Schwarz")
-                    .nombre("sDavid").build();
+                    .apellido("Schwarz".toUpperCase())
+                    .nombre("sDavid".toUpperCase()).build();
             entity.setUsuarioBaja(usuarioBaja.getUsuarioId());
             return entity;
         } catch (Exception e) {

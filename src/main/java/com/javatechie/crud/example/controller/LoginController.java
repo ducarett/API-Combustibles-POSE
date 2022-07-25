@@ -25,9 +25,9 @@ public class LoginController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping()
-    public ResponseEntity<String> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
+    public ResponseEntity<String> login(@RequestHeader String user, @RequestHeader String password) throws Exception {
 
-        JwtUser jwtUser;
+        JwtUser jwtUser = new JwtUser();
         Usuario usuario = userServiceImpl.getPorLogin(user);
 
         if (usuario == null || !usuario.getLogin().equals(user)) {

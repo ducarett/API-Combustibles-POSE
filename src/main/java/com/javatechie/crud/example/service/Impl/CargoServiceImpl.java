@@ -33,6 +33,7 @@ public class CargoServiceImpl extends BaseServiceImpl<Cargo, Integer> implements
             return cargos.stream()
                     .sorted(Comparator.comparing(e -> e.getDescripcionCargo()))
                     .map(e -> e.getDescripcionCargo())
+                    .map(String::toUpperCase)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new Exception(e.getMessage());

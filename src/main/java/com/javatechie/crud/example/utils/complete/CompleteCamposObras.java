@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Locale;
+
 @Service
 public class CompleteCamposObras {
 
@@ -38,6 +40,8 @@ public class CompleteCamposObras {
             Usuario usuarioAlta = Usuario.builder()
                     .usuarioId(1).build();
             entity.setUsuarioAlta(usuarioAlta);
+            entity.setDescripcion(entity.getDescripcion().toUpperCase());
+            entity.setNombreObra(entity.getNombreObra().toUpperCase());
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -51,6 +55,8 @@ public class CompleteCamposObras {
             Usuario usuarioMod = Usuario.builder()
                     .usuarioId(1).build();
             entity.setUsuarioMod(usuarioMod);
+            entity.setDescripcion(entity.getDescripcion().toUpperCase());
+            entity.setNombreObra(entity.getNombreObra().toUpperCase());
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());

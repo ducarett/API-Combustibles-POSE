@@ -154,7 +154,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     public String crearUserName(String nombre, String apellido) throws Exception {
         try {
             nombre = nombre.substring(0, 1);
-            return nombre.concat(apellido);
+            return nombre.concat(apellido).toUpperCase();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

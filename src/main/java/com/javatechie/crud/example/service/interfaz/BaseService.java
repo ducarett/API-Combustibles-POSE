@@ -2,9 +2,9 @@ package com.javatechie.crud.example.service.interfaz;
 
 import com.javatechie.crud.example.entity.Usuario;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface BaseService<E, ID extends Serializable> {
     List<E> findAll() throws Exception;
 
+    Page<E> findAll(Pageable pageable) throws Exception;
     E findById(ID id) throws Exception;
 
     E save(E entity) throws Exception;
