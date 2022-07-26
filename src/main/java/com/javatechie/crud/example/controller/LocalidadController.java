@@ -31,6 +31,7 @@ public class LocalidadController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/provincia/{id}")
     public List<String> getAllLocalidades(@PathVariable Integer id) throws Exception {
         try {
@@ -46,6 +47,7 @@ public class LocalidadController {
      * @param entity
      * @return
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     public ResponseEntity<?> createLocalidad(@RequestBody Localidad entity) {
         try {
@@ -61,6 +63,7 @@ public class LocalidadController {
      * @param id
      * @return
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
     public ResponseEntity<?> bajaLocalidad(@PathVariable int id) {
         try {
@@ -77,6 +80,7 @@ public class LocalidadController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
     public Localidad getLocalidad(@PathVariable Integer id) throws Exception {
         try {
@@ -93,6 +97,7 @@ public class LocalidadController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre/{id}")
     public String getNombreLocalidad(@PathVariable Integer id) throws Exception {
         try {
@@ -109,6 +114,7 @@ public class LocalidadController {
      * @param entity
      * @return
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateLocalidad(@PathVariable int id, @RequestBody Localidad entity) {
         try {
@@ -123,6 +129,7 @@ public class LocalidadController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
     public List<LocalidadDTO> listLocalidadesActivas() throws Exception {
         try {
@@ -138,6 +145,7 @@ public class LocalidadController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/all")
     public List<LocalidadConsultaDTO> listLocalidadesActivasInactivas() throws Exception {
         try {

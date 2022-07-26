@@ -31,7 +31,7 @@ public class ObraController {
      * @param entity
      * @return
      */
-    // @Secured(("ADMINISTRADOR"))
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     public ResponseEntity<?> createObra(@RequestBody Obra entity) {
         try {
@@ -47,6 +47,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/activas")
     public List<ObrasActivasDTO> getAllObrasActivas() throws Exception {
         try {
@@ -62,6 +63,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/inactivas")
     public List<ObrasActivasDTO> getAllObrasInactivas() throws Exception {
         try {
@@ -78,6 +80,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/{id}")
     public Obra searchForObraID(@PathVariable Integer id) throws Exception {
         try {
@@ -94,6 +97,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/descripcion")
     public List<ObrasActivasDTO> searchForDescription(@RequestParam String descripcion) throws Exception {
         try {
@@ -110,6 +114,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/provincia")
     public List<ObrasActivasDTO> searchForProvince(@RequestParam String provincia) throws Exception {
         try {
@@ -126,6 +131,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/localidad")
     public List<ObrasActivasDTO> searchForLocalidad(@RequestParam String localidad) throws Exception {
         try {
@@ -142,6 +148,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/gerente")
     public List<ObrasActivasDTO> searchForGerente(@RequestParam String gerente) throws Exception {
         try {
@@ -158,6 +165,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/jefe")
     public List<ObrasActivasDTO> searchForJefe(@RequestParam String jefe) throws Exception {
         try {
@@ -174,6 +182,7 @@ public class ObraController {
      * @return
      * @throws Exception
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/administrativo")
     public List<ObrasActivasDTO> searchForAdministrativo(@RequestParam String administrativo) throws Exception {
         try {
@@ -189,6 +198,7 @@ public class ObraController {
      * @param id
      * @return
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
     public ResponseEntity<?> bajaObra(@PathVariable int id) {
         try {
@@ -205,6 +215,7 @@ public class ObraController {
      * @param entity
      * @return
      */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity) {
         try {
