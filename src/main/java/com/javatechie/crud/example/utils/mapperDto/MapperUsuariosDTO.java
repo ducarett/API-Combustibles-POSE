@@ -44,6 +44,7 @@ public class MapperUsuariosDTO {
     private UserConsultaDTO mapperActivoinactivo(Usuario entity) throws Exception {
         try {
             UserConsultaDTO dto = UserConsultaDTO.builder()
+                    .id(entity.getUsuarioId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())
                     .login(entity.getLogin())

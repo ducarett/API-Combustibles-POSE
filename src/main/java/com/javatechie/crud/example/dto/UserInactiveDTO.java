@@ -14,14 +14,15 @@ import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
         "apellido",
         "nombre",
-        "usuario del sistema",
+        "userName",
         "legajo",
         "cargo",
-        "fecha de baja",
-        "hora de baja",
-        "usuario que dio la baja"
+        "fechaBaja",
+        "horaBaja",
+        "userBaja"
 })
 @Builder
 @Data
@@ -30,13 +31,16 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInactiveDTO {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("apellido")
     private String apellido;
 
     @JsonProperty("nombre")
     private String nombre;
 
-    @JsonProperty("usuario del sistema")
+    @JsonProperty("userName")
     private String login;
 
     @JsonProperty("legajo")
@@ -45,13 +49,13 @@ public class UserInactiveDTO {
     @JsonProperty("cargo")
     private String descripcionCargo;
 
-    @JsonProperty("fecha de baja")
+    @JsonProperty("fechaBaja")
     private LocalDate fechaBaja;
 
-    @JsonProperty("hora de baja")
+    @JsonProperty("horaBaja")
     private LocalDateTime horaBaja;
 
-    @JsonProperty("usuario que dio la baja")
+    @JsonProperty("userBaja")
     private Integer usuarioBaja;
 
 }

@@ -39,6 +39,7 @@ public class MapperMaquinistasDTO {
     private MaquinistaConsultaDTO mapperActivoinactivo(Maquinista entity) throws Exception {
         try {
             MaquinistaConsultaDTO dto = MaquinistaConsultaDTO.builder()
+                    .id(entity.getMaquinistaId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())
                     .legajo(entity.getLegajo())

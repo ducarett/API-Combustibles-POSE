@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
         "apellido",
         "nombre",
-        "usuario del sistema",
+        "userName",
         "legajo",
         "cargo",
         "activo"
@@ -25,13 +26,16 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserConsultaDTO {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("apellido")
     private String apellido;
 
     @JsonProperty("nombre")
     private String nombre;
 
-    @JsonProperty("usuario del sistema")
+    @JsonProperty("userName")
     private String login;
 
     @JsonProperty("legajo")
