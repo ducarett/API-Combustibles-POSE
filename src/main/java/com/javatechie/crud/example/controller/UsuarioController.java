@@ -130,11 +130,17 @@ public class UsuarioController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario entity) { // ver de mejorar esto
         try {
+
+
+            return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
+
+            /*
             if (!metodosUsuariosUtils.comprobarCampos(entity, id)) {
                 entity.setLogin(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido()));
                 return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
             }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"uno de los campos ya existe\"}");
+            */
+            // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"uno de los campos ya existe\"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
