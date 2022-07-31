@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CargoService extends BaseService<Cargo, Integer> {
 
-    List<String> listCargos() throws Exception;
+    List<Cargo> listCargos() throws Exception;
 }

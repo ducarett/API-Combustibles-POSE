@@ -7,9 +7,7 @@ import com.javatechie.crud.example.service.interfaz.CargoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CargoServiceImpl extends BaseServiceImpl<Cargo, Integer> implements CargoService {
@@ -27,14 +25,10 @@ public class CargoServiceImpl extends BaseServiceImpl<Cargo, Integer> implements
      * @throws Exception
      */
     @Override
-    public List<String> listCargos() throws Exception {
+    public List<Cargo> listCargos() throws Exception {
         try {
-            List<Cargo> cargos = cargoRepository.findAll();
-            return cargos.stream()
-                    .sorted(Comparator.comparing(e -> e.getDescripcionCargo()))
-                    .map(e -> e.getDescripcionCargo())
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toList());
+            return cargoRepository.findAll();
+            //return cargos.stream().sorted(Comparator.comparing(e -> e.getDescripcionCargo()));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
