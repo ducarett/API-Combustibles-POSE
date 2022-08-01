@@ -19,7 +19,13 @@ public class MapperMaquinistasDTO {
     public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(List<Maquinista> entities) throws Exception {
         try {
             List<MaquinistaConsultaDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> { try { entitiesDto.add(mapperActivoinactivo(entity)); } catch (Exception e) { throw new RuntimeException(e);} });
+            entities.stream().forEach(entity -> {
+                try {
+                    entitiesDto.add(mapperActivoinactivo(entity));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
