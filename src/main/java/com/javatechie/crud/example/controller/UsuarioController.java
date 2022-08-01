@@ -174,6 +174,7 @@ public class UsuarioController {
         try {
             String user = auth.getName().toUpperCase();
             return user;
+
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
