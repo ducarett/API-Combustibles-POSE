@@ -1,4 +1,4 @@
 #ignora la carpeta
 /target/
 #ignora la carpeta con las properties
-/resources/
+/resources/application.properties
