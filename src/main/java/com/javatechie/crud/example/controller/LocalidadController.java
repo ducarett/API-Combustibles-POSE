@@ -126,6 +126,7 @@ public class LocalidadController {
 
     /**
      * lista las las localidades en de forma alfabetica segun provincias.
+     *
      * @return
      * @throws Exception
      */
@@ -142,6 +143,7 @@ public class LocalidadController {
 
     /**
      * lista localidades con el campo activo.
+     *
      * @return
      * @throws Exception
      */

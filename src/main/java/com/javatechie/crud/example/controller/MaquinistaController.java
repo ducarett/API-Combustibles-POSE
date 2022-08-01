@@ -96,7 +96,7 @@ public class MaquinistaController {
                                                  @RequestParam(value = "sort", defaultValue = "id", required = false) String sortProperty) {
 
     */
-    public ResponseEntity<?> getUsuariosActivos( Pageable pageable) {
+    public ResponseEntity<?> getUsuariosActivos(Pageable pageable) {
         try {
             //Pageable pageable = PageRequest.of(page, size, direction, sortProperty);
             Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
@@ -105,6 +105,7 @@ public class MaquinistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
+
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre")
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
@@ -114,6 +115,7 @@ public class MaquinistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
+
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/apellido")
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
@@ -123,6 +125,7 @@ public class MaquinistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
+
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/legajo")
     public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
@@ -132,6 +135,7 @@ public class MaquinistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
+
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/getAll")
     public List<MaquinistaConsultaDTO> getAllMaquinistas() throws Exception {
