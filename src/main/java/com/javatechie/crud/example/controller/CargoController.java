@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 @RequestMapping("/cargos")
 @RestController
@@ -20,6 +19,7 @@ public class CargoController {
     @GetMapping("")
     public ResponseEntity<?> getAllCargos() throws Exception {
         try {
+
             return ResponseEntity.status(HttpStatus.OK).body(cargoServiceImpl.listCargos());
 
         } catch (Exception e) {
