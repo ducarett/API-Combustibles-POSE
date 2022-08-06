@@ -16,7 +16,7 @@ public class MapperMaquinistasDTO {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(List<Maquinista> entities) throws Exception {
+    public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(Page<Maquinista> entities) throws Exception {
         try {
             List<MaquinistaConsultaDTO> entitiesDto = new ArrayList<>();
             entities.stream().forEach(entity -> {

@@ -64,7 +64,7 @@ public class MaquinistaController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
-    public ResponseEntity<?> inactivarMaquinista(@PathVariable int id) {
+    public ResponseEntity<?> bajaMaquinista(@PathVariable int id) {
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(maquinistaServiceImpl.bajaMaquinista(id));
         } catch (Exception e) {
@@ -90,15 +90,8 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
-   /* public ResponseEntity<?> getUsuariosActivos( @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
-                                                 @RequestParam(value = "size", defaultValue = "1", required = false) Integer size,
-                                                 @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction,
-                                                 @RequestParam(value = "sort", defaultValue = "id", required = false) String sortProperty) {
-
-    */
     public ResponseEntity<?> getUsuariosActivos(Pageable pageable) {
         try {
-            //Pageable pageable = PageRequest.of(page, size, direction, sortProperty);
             Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
             return ResponseEntity.status(HttpStatus.OK).body(mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistas));
         } catch (Exception e) {
@@ -138,9 +131,9 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/getAll")
-    public List<MaquinistaConsultaDTO> getAllMaquinistas() throws Exception {
+    public List<MaquinistaConsultaDTO> getAllMaquinistas(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll());
+            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

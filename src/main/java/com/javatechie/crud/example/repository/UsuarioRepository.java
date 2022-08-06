@@ -2,6 +2,8 @@ package com.javatechie.crud.example.repository;
 
 
 import com.javatechie.crud.example.entity.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,26 +27,26 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
 
     List<Usuario> findByMail(String login);
 
-    List<Usuario> findByNombre(String nombre);
+    Page<Usuario> findByNombre(String nombre,Pageable pageable);
 
-    List<Usuario> findByApellido(String apellido);
+    Page<Usuario> findByApellido(String apellido,Pageable pageable);
 
     @Query(value = "SELECT distinct u FROM Usuario u INNER JOIN u.cargo c WHERE c.descripcionCargo = :cargo")
-    List<Usuario> findByCargo(@Param("cargo") String cargos);
+    Page<Usuario> findByCargo(@Param("cargo") String cargos, Pageable pageable);
 
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 10 AND u.fechaBaja is null ")
-    List<Usuario> findListGerente();
+    Page<Usuario> findListGerente(Pageable pageable);
 
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 20 AND u.fechaBaja is null ")
-    List<Usuario> findListJefes();
+    Page<Usuario> findListJefes(Pageable pageable);
 
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 30 AND u.fechaBaja is null ")
-    List<Usuario> findListAdministrativo();
+    Page<Usuario> findListAdministrativo(Pageable pageable);
 
-    List<Usuario> findByLegajo(Integer nombre);
+    Usuario findByLegajo(Integer nombre);
 
-    List<Usuario> findByFechaBajaIsNullAndHoraBajaIsNull();
+    Page<Usuario> findByFechaBajaIsNullAndHoraBajaIsNull(Pageable pageable);
 
-    List<Usuario> findByFechaBajaIsNotNullAndHoraBajaIsNotNull();
+    Page<Usuario> findByFechaBajaIsNotNullAndHoraBajaIsNotNull(Pageable pageable);
 
 }

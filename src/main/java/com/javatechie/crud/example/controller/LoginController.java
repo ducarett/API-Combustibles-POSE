@@ -28,12 +28,12 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestHeader String user, @RequestHeader String password) throws Exception {
 
         JwtUser jwtUser = new JwtUser();
-        Usuario usuario = userServiceImpl.getPorLogin(user);
+        Usuario usuario = userServiceImpl.getPorLogin(user.toUpperCase());
 
-        if (usuario == null || !usuario.getLogin().equals(user)) {
+        if (usuario == null || !usuario.getLogin().equals(user.toUpperCase())) {
             return new ResponseEntity<String>("{\"error\":\" usuario incorrecto.\"}", HttpStatus.BAD_REQUEST);
         }
-        if (!BCrypt.checkpw(password, usuario.getPassword())) {
+        if (!BCrypt.checkpw(password.toUpperCase(), usuario.getPassword())) {
             return new ResponseEntity<String>("{\"error\":\" password incorrecto.\"}", HttpStatus.BAD_REQUEST);
         }
 

@@ -41,7 +41,7 @@ public class CompleteCamposUsuarios {
             entity.setHoraAlta(LocalDateTime.now());
             entity.setNombre(entity.getNombre().toUpperCase());
             entity.setApellido(entity.getApellido().toUpperCase());
-            entity.setUsuarioAlta(usuarioServiceImpl.findById(1).getUsuarioId());//esta hardcodeado
+            entity.setUsuarioAlta(1);//esta hardcodeado
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());

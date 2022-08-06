@@ -7,6 +7,7 @@ import com.javatechie.crud.example.dto.UserConsultaDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +46,9 @@ public class UsuarioController {
      */
     //@Secured({"ADMINISTRADOR", "ADMINISTRATIVO"})
     @GetMapping("/active")
-    public ResponseEntity<?> getUserActivos() {
+    public ResponseEntity<?> getUserActivos(Pageable pageable) {
         try {
-            List<Usuario> usuarios = userServiceImpl.listarActivos();
+            Page<Usuario> usuarios = userServiceImpl.listarActivos(pageable);
             return ResponseEntity.status(HttpStatus.OK).body(mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarios));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
@@ -60,10 +61,9 @@ public class UsuarioController {
      * @return
      */
     @GetMapping("/inactive")
-    public ResponseEntity<?> getUerInactivos() {
+    public ResponseEntity<?> getUerInactivos(Pageable pageable) {
         try {
-            List<Usuario> usuarios = userServiceImpl.listarInactivos();
-            return ResponseEntity.status(HttpStatus.OK).body(mapperUsuariosDTO.mapperDtoUsuarioInactivo(usuarios));
+            return ResponseEntity.status(HttpStatus.OK).body(mapperUsuariosDTO.mapperDtoUsuarioInactivo(userServiceImpl.listarInactivos(pageable)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\" por favor intentelo mas tarde.\"}" + e.getMessage());
         }
@@ -76,9 +76,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/getAll")
-    public List<UserConsultaDTO> getAllUsuarios() throws Exception {
+    public List<UserConsultaDTO> getAllUsuarios(Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoConsultaUsuarios(userServiceImpl.findAll());
+            return mapperUsuariosDTO.mapperDtoConsultaUsuarios(userServiceImpl.findAll(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -111,7 +111,7 @@ public class UsuarioController {
     public ResponseEntity<?> createUsuario(@RequestBody Usuario entity) {
         try {
             entity.setLogin(metodosUsuariosUtils.comprobarUserNameRepetido(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido())));
-            entity.setPassword(BCrypt.hashpw(entity.getPassword(), BCrypt.gensalt()));
+            entity.setPassword(BCrypt.hashpw(entity.getPassword().toUpperCase(), BCrypt.gensalt()));
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.save(completeCamposUsuarios.usuarioCamposAlta(entity)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
@@ -188,9 +188,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/nombre")
-    public List<UserDTO> searchForNombre(@RequestParam String name) throws Exception {
+    public List<UserDTO> searchForNombre(@RequestParam String name,Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorNombre(name.toUpperCase());
+            return userServiceImpl.listarPorNombre(name.toUpperCase(),pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -204,9 +204,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/apellido")
-    public List<UserDTO> searchForApellido(@RequestParam String lastName) throws Exception {
+    public List<UserDTO> searchForApellido(@RequestParam String lastName,Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorApellido(lastName.toUpperCase());
+            return userServiceImpl.listarPorApellido(lastName.toUpperCase(),pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -220,9 +220,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/cargo")
-    public List<UserDTO> searchForCargo(@RequestParam String position) throws Exception {
+    public List<UserDTO> searchForCargo(@RequestParam String position,Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorCargo(position.toUpperCase());
+            return userServiceImpl.listarPorCargo(position.toUpperCase(),pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -252,9 +252,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/legajo")
-    public List<UserDTO> searchForlegajo(@RequestParam Integer legajo) throws Exception {
+    public UserDTO searchForlegajo(@RequestParam Integer legajo) throws Exception {
         try {
-            return userServiceImpl.listarPorLegajo(legajo);
+            return userServiceImpl.buscarPorLegajo(legajo);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -286,9 +286,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/gerentes")
-    public List<String> listGerentes() throws Exception {
+    public List<String> listGerentes(Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listaGerentes();
+            return userServiceImpl.listaGerentes(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -301,9 +301,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/jefes")
-    public List<String> listJefes() throws Exception {
+    public List<String> listJefes(Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listaJefes();
+            return userServiceImpl.listaJefes(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -316,9 +316,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/administrativos")
-    public List<String> listAdministrativos() throws Exception {
+    public List<String> listAdministrativos(Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listaAdministrativos();
+            return userServiceImpl.listaAdministrativos(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

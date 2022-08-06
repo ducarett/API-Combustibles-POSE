@@ -2,6 +2,7 @@ package com.javatechie.crud.example.utils.mapperDto;
 
 import com.javatechie.crud.example.dto.ObrasActivasDTO;
 import com.javatechie.crud.example.entity.Obra;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class MapperObrasDTO {
      * @return
      * @throws Exception
      */
-    public List<ObrasActivasDTO> mapperDtoObrasActivas(List<Obra> entities) throws Exception {
+    public List<ObrasActivasDTO> mapperDtoObrasActivas(Page<Obra> entities) throws Exception {
         try {
             List<ObrasActivasDTO> entitiesDto = new ArrayList<>();
             for (Obra auxObras : entities) {

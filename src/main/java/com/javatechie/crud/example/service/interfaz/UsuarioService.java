@@ -2,6 +2,8 @@ package com.javatechie.crud.example.service.interfaz;
 
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,23 +13,23 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
 
     UserDTO buscarPorLogin(String login) throws Exception;
 
-    List<UserDTO> listarPorNombre(String nombre) throws Exception;
+    List<UserDTO> listarPorNombre(String nombre,Pageable pageable) throws Exception;
 
-    List<UserDTO> listarPorApellido(String apellido) throws Exception;
+    List<UserDTO> listarPorApellido(String apellido,Pageable pageable) throws Exception;
 
-    List<UserDTO> listarPorCargo(String cargo) throws Exception;
+    List<UserDTO> listarPorCargo(String cargo,Pageable pageable) throws Exception;
 
-    List<UserDTO> listarPorLegajo(Integer legajo) throws Exception;
+    UserDTO buscarPorLegajo(Integer legajo) throws Exception;
 
     boolean bajaUsuario(Integer id) throws Exception;
 
-    List<Usuario> listarActivos() throws Exception;
+    Page<Usuario> listarActivos(Pageable pageable) throws Exception;
 
-    List<Usuario> listarInactivos() throws Exception;
+    Page<Usuario> listarInactivos(Pageable pageable) throws Exception;
 
-    List<String> listaGerentes() throws Exception;
+    List<String> listaGerentes(Pageable pageable) throws Exception;
 
-    List<String> listaJefes() throws Exception;
+    List<String> listaJefes(Pageable pageable) throws Exception;
 
-    List<String> listaAdministrativos() throws Exception;
+    List<String> listaAdministrativos(Pageable pageable) throws Exception;
 }

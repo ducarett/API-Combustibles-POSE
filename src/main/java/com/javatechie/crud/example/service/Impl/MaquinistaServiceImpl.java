@@ -62,9 +62,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Page<Maquinista> listActivos(Pageable pageable) throws Exception {
         try {
-            Page<Maquinista> entities = maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
-            return entities;
-
+            return maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

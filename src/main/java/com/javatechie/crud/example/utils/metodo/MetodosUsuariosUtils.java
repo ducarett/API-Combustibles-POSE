@@ -5,6 +5,7 @@ import com.javatechie.crud.example.repository.UsuarioRepository;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -29,7 +30,7 @@ public class MetodosUsuariosUtils {
     /**
      * comprueba que los capos no exsitan antes de modificar un usuario.
      */
-    public boolean comprobarCampos(Usuario entity, Integer id) throws Exception {
+  /*  public boolean comprobarCampos(Usuario entity, Integer id) throws Exception {
         try {
             Optional<Usuario> optional = usuarioRepository.findById(id);
             Usuario user = optional.get();
@@ -37,15 +38,17 @@ public class MetodosUsuariosUtils {
                 return false;
             } else if ((usuarioRepository.findByCelular(entity.getCelular()).isEmpty()) || (entity.getCelular() == user.getCelular())) {
                 return false;
-            } else if ((usuarioRepository.findByLegajo(entity.getLegajo()).isEmpty()) || (entity.getLegajo() == user.getLegajo())) {
+            } /*else if ((usuarioRepository.findByLegajo(entity.getLegajo()).isEmpty()) || (entity.getLegajo() == user.getLegajo())) {
                 return false;
             } else {
                 return true;
-            }
+            }S
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
+    */
+
 
     public Usuario cambiarClave(String pass,String newPass,String newPassConf, Integer id) throws Exception {
         try {
@@ -69,7 +72,7 @@ public class MetodosUsuariosUtils {
         }
     }
 
-    public List<String> listarAlfabeticamenteNomApell(List<Usuario> entities) {
+    public List<String> listarAlfabeticamenteNomApell(Page<Usuario> entities) {
         return entities.stream()
                 .sorted(Comparator.comparing(e -> e.getApellido().concat(" " + e.getNombre())))
                 .map(e -> e.getNombre().concat(" " + e.getApellido()))
