@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LocalidadService extends BaseService<Localidad, Integer> {
 
-    List<String> listLocalidades(Integer provinciaId) throws Exception;
+    List<LocalidadDTO> listLocalidades(Integer provinciaId) throws Exception;
 
     boolean bajaLocalidad(Integer id) throws Exception;
 

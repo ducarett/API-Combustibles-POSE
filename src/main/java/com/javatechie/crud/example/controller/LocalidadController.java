@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/localidad")
 public class LocalidadController {
+
     @Autowired
     private LocalidadServiceImpl localidadServiceImpl;
     @Autowired
@@ -25,7 +26,8 @@ public class LocalidadController {
     private CompleteCamposLocalidad completeCampos;
 
     /**
-     * lista alfabeticamente todas las localidades relacionadas a una provincia por ID.
+     * lista alfabeticamente todas las localidades relacionadas a una provincia
+     * por ID.
      *
      * @param id
      * @return
@@ -33,9 +35,9 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/provincia/{id}")
-    public List<String> getAllLocalidades(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<?> getAllLocalidades(@PathVariable Integer id) throws Exception {
         try {
-            return localidadServiceImpl.listLocalidades(id);
+            return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.listLocalidades(id));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -134,7 +136,7 @@ public class LocalidadController {
     @GetMapping("/active")
     public List<LocalidadDTO> listLocalidadesActivas() throws Exception {
         try {
-            return mapperLocalidadesDTO.mapperDtoLocalidadActivo(localidadServiceImpl.ordenarLocalidades());
+            return localidadServiceImpl.ordenarLocalidades();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

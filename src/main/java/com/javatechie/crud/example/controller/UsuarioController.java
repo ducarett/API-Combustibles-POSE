@@ -7,14 +7,10 @@ import com.javatechie.crud.example.dto.UserConsultaDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
@@ -26,22 +22,29 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/user")
 public class UsuarioController {
+    
+    private static final String FAILED_PROCESS = "Error: por favor intentelo mas tarde";
+  
+    private final UsuarioServiceImpl userServiceImpl;
+  
+    private final MapperUsuariosDTO mapperUsuariosDTO;
+   
+    private final CompleteCamposUsuarios completeCamposUsuarios;
 
-    @Autowired
-    private UsuarioServiceImpl userServiceImpl;
+    private final MetodosUsuariosUtils metodosUsuariosUtils;
 
-    @Autowired
-    private MapperUsuariosDTO mapperUsuariosDTO;
-
-    @Autowired
-    private CompleteCamposUsuarios completeCamposUsuarios;
-
-    @Autowired
-    private MetodosUsuariosUtils metodosUsuariosUtils;
+    public UsuarioController(UsuarioServiceImpl userServiceImpl, MapperUsuariosDTO mapperUsuariosDTO,
+            CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils) {
+        this.userServiceImpl = userServiceImpl;
+        this.mapperUsuariosDTO = mapperUsuariosDTO;
+        this.completeCamposUsuarios = completeCamposUsuarios;
+        this.metodosUsuariosUtils = metodosUsuariosUtils;
+    }    
 
     /**
      * lista los usuarios activos.
      *
+     * @param pageable
      * @return
      */
     //@Secured({"ADMINISTRADOR", "ADMINISTRATIVO"})
@@ -58,6 +61,7 @@ public class UsuarioController {
     /**
      * Lista los usuarios inactivos.
      *
+     * @param pageable
      * @return
      */
     @GetMapping("/inactive")
@@ -72,6 +76,7 @@ public class UsuarioController {
     /**
      * retorna una lista de dtos con el campo activo en si o no.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -96,7 +101,7 @@ public class UsuarioController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.findById(id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(FAILED_PROCESS);
         }
     }
 
@@ -114,7 +119,7 @@ public class UsuarioController {
             entity.setPassword(BCrypt.hashpw(entity.getPassword().toUpperCase(), BCrypt.gensalt()));
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.save(completeCamposUsuarios.usuarioCamposAlta(entity)));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
         }
     }
 
@@ -130,8 +135,7 @@ public class UsuarioController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario entity) { // ver de mejorar esto
         try {
-
-
+            
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
 
             /*
@@ -142,7 +146,7 @@ public class UsuarioController {
             */
             // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"uno de los campos ya existe\"}");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
         }
     }
 
@@ -158,7 +162,7 @@ public class UsuarioController {
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
         }
     }
 
@@ -176,7 +180,7 @@ public class UsuarioController {
             return user;
 
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -184,6 +188,7 @@ public class UsuarioController {
      * busca usuarios por nombre.
      *
      * @param name
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -192,7 +197,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.listarPorNombre(name.toUpperCase(),pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -200,6 +205,7 @@ public class UsuarioController {
      * busca usuarios por apellido.
      *
      * @param lastName
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -208,7 +214,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.listarPorApellido(lastName.toUpperCase(),pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -216,6 +222,7 @@ public class UsuarioController {
      * busca usuarios por cargo.
      *
      * @param position
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -224,7 +231,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.listarPorCargo(position.toUpperCase(),pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -240,7 +247,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.buscarPorLogin(userName.toUpperCase());
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -256,7 +263,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.buscarPorLegajo(legajo);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -275,13 +282,14 @@ public class UsuarioController {
         try {
             return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
         } catch (Exception e) {
-            throw new Exception(e.getMessage() + ". Error al actualizar password");
+            throw new Exception(FAILED_PROCESS + e.getMessage() + ". Error al actualizar password");
         }
     }
 
     /**
      * retorna una lista de gerentes con nombre y apellido ordenados alfabeticamente.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -290,13 +298,14 @@ public class UsuarioController {
         try {
             return userServiceImpl.listaGerentes(pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
     /**
      * retorna una lista de jefes con nombre y apellido ordenados alfabeticamente.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -305,13 +314,14 @@ public class UsuarioController {
         try {
             return userServiceImpl.listaJefes(pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
     /**
      * retorna una lista de administrativos rodenados alfabeticamente.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -320,7 +330,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.listaAdministrativos(pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(FAILED_PROCESS + e.getMessage() );
         }
     }
 }

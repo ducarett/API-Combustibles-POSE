@@ -6,7 +6,6 @@ import com.javatechie.crud.example.repository.ProvinciaRepository;
 import com.javatechie.crud.example.service.interfaz.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +24,9 @@ public class ProvinciaServiceImpl extends BaseServiceImpl<Provincia, Integer> im
     @Override
     public List<Provincia> listaProvincias() throws Exception {
            return Optional
-                   .ofNullable(provinciaRepository.findAll().stream().sorted(Comparator.comparing(prov -> prov.getDescriptionProvincia())).collect(Collectors.toList()))
+                   .ofNullable(provinciaRepository.findAll().stream()
+                           .sorted(Comparator.comparing(prov -> prov.getDescriptionProvincia()))
+                           .collect(Collectors.toList()))
                            .orElseThrow(Exception::new);
     }
 }

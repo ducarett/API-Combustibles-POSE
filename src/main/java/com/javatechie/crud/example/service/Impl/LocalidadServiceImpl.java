@@ -16,7 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.crypto.AEADBadTagException;
+import org.modelmapper.ModelMapper;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> implements LocalidadService {
@@ -26,6 +30,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
 
     @Autowired
     private MapperLocalidadesDTO mapperLocalidadesDTO;
+
     @Autowired
     private MetodosLocalidadUtils metodosLocalidadUtils;
 
@@ -44,19 +49,17 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
      * @throws Exception
      */
 
-    @Override
-    public List<String> listLocalidades(Integer provinciaId) throws Exception {
-        try {
-            List<Localidad> provincias = localidadRepository.findAllForProvincia(provinciaId);
-            return provincias.stream()
-                    .filter(provincia -> provincia.getFechaBaja() == null)
-                    .sorted(Comparator.comparing(e -> e.getDescripcionLocalidad()))
-                    .map(e -> e.getDescripcionLocalidad())
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    @Override 
+    public List<LocalidadDTO> listLocalidades(Integer provinciaId) throws Exception {
+        ModelMapper model = new ModelMapper();
+        return Optional
+                .ofNullable(localidadRepository.findAllForProvincia(provinciaId).stream()
+                        .filter(localidad -> localidad.getFechaBaja() == null)
+                        .sorted(Comparator.comparing(localidad -> localidad.getDescripcionLocalidad()))
+                        .map(localidad -> model.map(localidad,LocalidadDTO.class))
+                        .collect(Collectors.toList()))
+                .orElseThrow(Exception::new);
+
     }
 
     /**
@@ -99,6 +102,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
         }
     }
 
+    @Override
     public List<LocalidadDTO> ordenarLocalidades() throws Exception {
         try {
             return metodosLocalidadUtils.ordenarProvicnciasAlfabeticamente(localidadRepository.findByFechaBajaIsNullAndHoraBajaIsNull());
@@ -110,7 +114,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     public List<LocalidadConsultaDTO> ordenarLocalidadesActivosInactivos() throws Exception {
         try {
             List<LocalidadConsultaDTO> entities = new ArrayList<>();
-            localidadRepository.findAll().stream().forEach(localidad -> {
+            localidadRepository.findAll().forEach(localidad -> {
                 try {
                     entities.add(mapperLocalidadesDTO.mapperActivoinactivo(localidad));
                 } catch (Exception e) {

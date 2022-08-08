@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "id",
-        "provincia",
-        "localidad"
+    "id",
+    "provincia",
+    "localidad",
+    "codigoPostal"
 })
 @Builder
 @Data
@@ -24,11 +25,14 @@ public class LocalidadDTO {
 
     @JsonProperty("id")
     private Integer id;
-
+    
     @JsonProperty("provincia")
     private String provincia;
 
     @JsonProperty("localidad")
     private String localidad;
+
+    @JsonProperty("codigoPostal")
+    private Integer codigoPostal;
 
 }

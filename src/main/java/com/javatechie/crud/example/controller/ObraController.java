@@ -45,6 +45,7 @@ public class ObraController {
     /**
      * retorna una lista de obras activas.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -61,6 +62,7 @@ public class ObraController {
     /**
      * retorna una lista de obras inactivas.
      *
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -95,6 +97,7 @@ public class ObraController {
      * busca obras por descripcion.
      *
      * @param descripcion
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -112,6 +115,7 @@ public class ObraController {
      * busca obras por provincia.
      *
      * @param provincia
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -129,6 +133,7 @@ public class ObraController {
      * busca obras por localidad.
      *
      * @param localidad
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -146,6 +151,7 @@ public class ObraController {
      * busca obras por puesto de trabajo : gerente.
      *
      * @param gerente
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -163,6 +169,7 @@ public class ObraController {
      * busca obras por puesto de trabajo : jefe
      *
      * @param jefe
+     * @param pageable
      * @return
      * @throws Exception
      */
@@ -180,6 +187,7 @@ public class ObraController {
      * busca obras por puesto de trabajo : administrativo.
      *
      * @param administrativo
+     * @param pageable
      * @return
      * @throws Exception
      */

@@ -13,10 +13,10 @@ public class MapperLocalidadesDTO {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    public List<LocalidadDTO> mapperDtoLocalidadActivo(List<LocalidadDTO> entities) throws Exception {
+    public List<LocalidadDTO> mapperDtoLocalidadActivo(List<Localidad> entities) throws Exception {
         try {
             List<LocalidadDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, LocalidadDTO.class)));
+            entities.forEach(entity -> entitiesDto.add(modelMapper.map(entity, LocalidadDTO.class)));
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());

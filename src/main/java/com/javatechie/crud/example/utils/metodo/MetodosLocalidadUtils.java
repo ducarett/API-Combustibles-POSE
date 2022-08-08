@@ -40,6 +40,7 @@ public class MetodosLocalidadUtils {
             }
         }
         return listProvincias.stream().flatMap(List::stream).map(e -> modelMapper.map(e, LocalidadDTO.class)).collect(Collectors.toList());
+        //return listProvincias.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     /**

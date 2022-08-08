@@ -1,22 +1,17 @@
 package com.javatechie.crud.example.utils.complete;
 
 import com.javatechie.crud.example.entity.*;
-import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 @Service
 public class CompleteCamposUsuarios {
 
-    @Autowired
-    private UsuarioServiceImpl usuarioServiceImpl;
-
-
-
     public Usuario usuarioCamposMod(Usuario entity) throws Exception {
         try {
+            
             entity.setFechaMod(LocalDate.now());
             entity.setHoraMod(LocalDateTime.now());
             Usuario usuarioMod = Usuario.builder()
@@ -34,7 +29,6 @@ public class CompleteCamposUsuarios {
      * @param entity
      * @throws Exception
      */
-
     public Usuario usuarioCamposAlta(Usuario entity) throws Exception {
         try {
             entity.setFechaAlta(LocalDate.now());
@@ -47,7 +41,6 @@ public class CompleteCamposUsuarios {
             throw new Exception(e.getMessage());
         }
     }
-
 
     public Usuario usuarioCamposBaja(Usuario entity) throws Exception {
         try {
@@ -63,10 +56,5 @@ public class CompleteCamposUsuarios {
             throw new Exception(e.getMessage());
         }
     }
-
-
-
-
-
 
 }

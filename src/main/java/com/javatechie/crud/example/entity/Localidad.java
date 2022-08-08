@@ -1,6 +1,5 @@
 package com.javatechie.crud.example.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class Localidad extends EntityBase implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "ID_LOCALIDAD")
-    private int localidadId;
+    private Integer Id;
 
     @ManyToOne
     @JoinColumn(name = "ID_PROVINCIA")
@@ -41,5 +41,8 @@ public class Localidad extends EntityBase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
+
+    @Column(name = "CP")
+    private Integer codigoPostal;
 
 }
