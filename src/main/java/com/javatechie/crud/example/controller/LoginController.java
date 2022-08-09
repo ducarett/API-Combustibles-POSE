@@ -1,14 +1,20 @@
 package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.entity.Usuario;
-import com.javatechie.crud.example.security.model.JwtUser;
-import com.javatechie.crud.example.security.seguridad.JwtGenerator;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/login")
 @RestController
@@ -17,17 +23,11 @@ public class LoginController {
     @Autowired
     private UsuarioServiceImpl userServiceImpl;
 
-    private JwtGenerator jwtGenerator;
-
-    public LoginController(JwtGenerator jwtGenerator) throws Exception {
-        this.jwtGenerator = jwtGenerator;
-    }
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping()
     public ResponseEntity<String> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
 
-        JwtUser jwtUser;
         Usuario usuario = userServiceImpl.getPorLogin(user);
 
         if (usuario == null || !usuario.getLogin().equals(user)) {
@@ -37,25 +37,28 @@ public class LoginController {
             return new ResponseEntity<String>("{\"error\":\" password incorrecto.\"}", HttpStatus.BAD_REQUEST);
         }
 
-        jwtUser = existUser(usuario);
-
-        if (jwtUser != null) {
-            return new ResponseEntity<String>(jwtGenerator.generate(jwtUser), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-        }
+        return new ResponseEntity<String>(getJWTToken(user), HttpStatus.OK);
     }
 
-    private JwtUser existUser(Usuario usuario) throws Exception {
-        try {
-            JwtUser jwtUser = new JwtUser();
-            jwtUser.setUserName(usuario.getLogin());
-            jwtUser.setId(usuario.getUsuarioId());
-            jwtUser.setRole(usuario.getTipoUsuario().getDescripcion());
-            return jwtUser;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    private String getJWTToken(String username) {
+        String secretKey = "mySecretKey";
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList("ROLE_USER");
+
+        String token = Jwts
+                .builder()
+                .setId("softtekJWT")
+                .setSubject(username)
+                .claim("authorities",
+                        grantedAuthorities.stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .signWith(SignatureAlgorithm.HS512,
+                        secretKey.getBytes()).compact();
+
+        return "Bearer " + token;
     }
 
 }
