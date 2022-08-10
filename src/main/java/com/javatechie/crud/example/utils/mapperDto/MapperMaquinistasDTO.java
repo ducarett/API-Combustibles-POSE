@@ -4,26 +4,35 @@ import com.javatechie.crud.example.dto.MaquinistaActivoDTO;
 import com.javatechie.crud.example.dto.MaquinistaConsultaDTO;
 import com.javatechie.crud.example.entity.Maquinista;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class MapperMaquinistasDTO {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(List<Maquinista> entities) throws Exception {
+    public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(Page<Maquinista> entities) throws Exception {
         try {
             List<MaquinistaConsultaDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> { try { entitiesDto.add(mapperActivoinactivo(entity)); } catch (Exception e) { throw new RuntimeException(e);} });
+            entities.stream().forEach(entity -> {
+                try {
+                    entitiesDto.add(mapperActivoinactivo(entity));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public List<MaquinistaActivoDTO> mapperDtoMaquinistaActivo(List<Maquinista> entities) throws Exception {
+    public List<MaquinistaActivoDTO> mapperDtoMaquinistaActivo(Page<Maquinista> entities) throws Exception {
         try {
             List<MaquinistaActivoDTO> entitiesDto = new ArrayList<>();
             entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, MaquinistaActivoDTO.class)));
@@ -36,14 +45,15 @@ public class MapperMaquinistasDTO {
     private MaquinistaConsultaDTO mapperActivoinactivo(Maquinista entity) throws Exception {
         try {
             MaquinistaConsultaDTO dto = MaquinistaConsultaDTO.builder()
+                    .id(entity.getMaquinistaId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())
                     .legajo(entity.getLegajo())
                     .build();
             if (entity.getFechaBaja() == null && entity.getHoraBaja() == null) {
-                dto.setActivo("si");
+                dto.setActivo("SI");
             } else {
-                dto.setActivo("no");
+                dto.setActivo("NO");
             }
             return dto;
         } catch (Exception e) {

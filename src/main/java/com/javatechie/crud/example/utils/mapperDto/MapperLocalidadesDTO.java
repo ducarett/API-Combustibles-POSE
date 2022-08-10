@@ -13,10 +13,10 @@ public class MapperLocalidadesDTO {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    public List<LocalidadDTO> mapperDtoLocalidadActivo(List<LocalidadDTO> entities) throws Exception {
+    public List<LocalidadDTO> mapperDtoLocalidadActivo(List<Localidad> entities) throws Exception {
         try {
             List<LocalidadDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, LocalidadDTO.class)));
+            entities.forEach(entity -> entitiesDto.add(modelMapper.map(entity, LocalidadDTO.class)));
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -25,13 +25,13 @@ public class MapperLocalidadesDTO {
     public LocalidadConsultaDTO mapperActivoinactivo(Localidad entity) throws Exception {
         try {
             LocalidadConsultaDTO dto = LocalidadConsultaDTO.builder()
-                    .provincia(entity.getProvincia().getDescriptionProvincia())
-                    .localidad(entity.getDescripcionLocalidad())
+                    .provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
+                    .localidad(entity.getDescripcionLocalidad().toUpperCase())
                     .build();
             if (entity.getFechaBaja() == null && entity.getHoraBaja() == null) {
-                dto.setActivo("si");
+                dto.setActivo("SI");
             } else {
-                dto.setActivo("no");
+                dto.setActivo("NO");
             }
             return dto;
         } catch (Exception e) {

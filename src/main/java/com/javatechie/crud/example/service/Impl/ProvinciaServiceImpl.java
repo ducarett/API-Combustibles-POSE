@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,16 +22,11 @@ public class ProvinciaServiceImpl extends BaseServiceImpl<Provincia, Integer> im
     }
 
     @Override
-    public List<String> listaProvincias() throws Exception {
-        try {
-            List<Provincia> provincias = provinciaRepository.findAll();
-            return provincias.stream()
-                    .sorted(Comparator.comparing(e -> e.getDescriptionProvincia()))
-                    .map(e -> e.getDescriptionProvincia())
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-
+    public List<Provincia> listaProvincias() throws Exception {
+           return Optional
+                   .ofNullable(provinciaRepository.findAll().stream()
+                           .sorted(Comparator.comparing(prov -> prov.getDescriptionProvincia()))
+                           .collect(Collectors.toList()))
+                           .orElseThrow(Exception::new);
     }
 }

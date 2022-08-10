@@ -9,7 +9,10 @@ import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.javatechie.crud.example.repository.UsuarioRepository;
@@ -37,9 +40,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorNombre(String nombre) throws Exception {
+    public List<UserDTO> listarPorNombre(String nombre,Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByNombre(nombre));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByNombre(nombre,pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -52,9 +55,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorApellido(String apellido) throws Exception {
+    public List<UserDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByApellido(apellido));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByApellido(apellido,pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -67,9 +70,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorCargo(String cargo) throws Exception {
+    public List<UserDTO> listarPorCargo(String cargo,Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByCargo(cargo));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByCargo(cargo,pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -82,9 +85,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorLegajo(Integer legajo) throws Exception {
+    public UserDTO buscarPorLegajo(Integer legajo) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByLegajo(legajo));
+            return new ModelMapper().map(usuarioRepository.findByLegajo(legajo),UserDTO.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -154,7 +157,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     public String crearUserName(String nombre, String apellido) throws Exception {
         try {
             nombre = nombre.substring(0, 1);
-            return nombre.concat(apellido);
+            return nombre.concat(apellido).toUpperCase();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -168,9 +171,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<Usuario> listarActivos() throws Exception {
+    public Page<Usuario> listarActivos(Pageable pageable) throws Exception {
         try {
-            return usuarioRepository.findByFechaBajaIsNullAndHoraBajaIsNull();
+            return usuarioRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -183,9 +186,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<Usuario> listarInactivos() throws Exception {
+    public Page<Usuario> listarInactivos(Pageable pageable) throws Exception {
         try {
-            return usuarioRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull();
+            return usuarioRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -198,9 +201,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaGerentes() throws Exception {
+    public List<String> listaGerentes(Pageable pageable) throws Exception {
         try {
-            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListGerente());
+            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListGerente(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -213,9 +216,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaJefes() throws Exception {
+    public List<String> listaJefes(Pageable pageable) throws Exception {
         try {
-            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListJefes());
+            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListJefes(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -228,9 +231,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaAdministrativos() throws Exception {
+    public List<String> listaAdministrativos(Pageable pageable) throws Exception {
         try {
-            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListAdministrativo());
+            return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListAdministrativo(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

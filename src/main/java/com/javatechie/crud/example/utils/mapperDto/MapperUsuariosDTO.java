@@ -3,6 +3,7 @@ package com.javatechie.crud.example.utils.mapperDto;
 import com.javatechie.crud.example.dto.*;
 import com.javatechie.crud.example.entity.Usuario;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,7 +22,7 @@ public class MapperUsuariosDTO {
      * @return
      * @throws Exception
      */
-    public List<UserInactiveDTO> mapperDtoUsuarioInactivo(List<Usuario> entities) throws Exception {
+    public List<UserInactiveDTO> mapperDtoUsuarioInactivo(Page<Usuario> entities) throws Exception {
         try {
             List<UserInactiveDTO> entitiesDto = new ArrayList<>();
             for (Usuario auxUsuario : entities) {
@@ -43,6 +44,7 @@ public class MapperUsuariosDTO {
     private UserConsultaDTO mapperActivoinactivo(Usuario entity) throws Exception {
         try {
             UserConsultaDTO dto = UserConsultaDTO.builder()
+                    .id(entity.getUsuarioId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())
                     .login(entity.getLogin())
@@ -69,7 +71,7 @@ public class MapperUsuariosDTO {
      */
 
     @Transactional
-    public List<UserConsultaDTO> mapperDtoConsultaUsuarios(List<Usuario> entities) throws Exception {
+    public List<UserConsultaDTO> mapperDtoConsultaUsuarios(Page<Usuario> entities) throws Exception {
         try {
             List<UserConsultaDTO> entitiesDto = new ArrayList<>();
             for (Usuario auxUsuario : entities) {
@@ -82,7 +84,7 @@ public class MapperUsuariosDTO {
     }
 
     @Transactional
-    public List<UserDTO> mapperDtoUsuarioActivo(List<Usuario> entities) throws Exception {
+    public List<UserDTO> mapperDtoUsuarioActivo(Page<Usuario> entities) throws Exception {
         try {
             List<UserDTO> entitiesDto = new ArrayList<>();
             for (Usuario auxUsuario : entities) {

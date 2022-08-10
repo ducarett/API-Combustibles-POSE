@@ -2,6 +2,8 @@ package com.javatechie.crud.example.service.Impl;
 
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.service.interfaz.BaseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
@@ -28,6 +30,26 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
     public List<E> findAll() throws Exception {
         try {
             List<E> entities = interfaceBaseRepository.findAll();
+            return entities;
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
+    /**
+     * metodo generico para obtener una lista paginada de una entidad especifica.
+     *
+     * @param pageable
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public Page<E> findAll(Pageable pageable) throws Exception {
+        try {
+            Page<E> entities = interfaceBaseRepository.findAll(pageable);
             return entities;
 
         } catch (Exception e) {

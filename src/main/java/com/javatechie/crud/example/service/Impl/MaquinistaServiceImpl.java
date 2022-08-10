@@ -11,6 +11,8 @@ import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.MaquinistaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,11 +60,9 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
      * @throws Exception
      */
     @Override
-    public List<Maquinista> listActivos() throws Exception {
+    public Page<Maquinista> listActivos(Pageable pageable) throws Exception {
         try {
-            List<Maquinista> entities = maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull();
-            return entities;
-
+            return maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

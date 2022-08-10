@@ -6,6 +6,10 @@ import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.service.Impl.MaquinistaServiceImpl;
 import com.javatechie.crud.example.utils.mapperDto.MapperMaquinistasDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,7 @@ public class MaquinistaController {
     @Autowired
     private MapperMaquinistasDTO mapperMaquinistasDTO;
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     public ResponseEntity<?> crearMaquinista(@RequestBody Maquinista entity) {
         try {
@@ -39,7 +44,7 @@ public class MaquinistaController {
      * @param entity
      * @return
      */
-    // @Secured(("ADMINISTRADOR"))
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> modificarMaquinista(@PathVariable int id, @RequestBody Maquinista entity) {
         try {
@@ -57,9 +62,9 @@ public class MaquinistaController {
      * @param id
      * @return
      */
-    //@Secured(("ADMINISTRADOR"))
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
-    public ResponseEntity<?> inactivarMaquinista(@PathVariable int id) {
+    public ResponseEntity<?> bajaMaquinista(@PathVariable int id) {
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(maquinistaServiceImpl.bajaMaquinista(id));
         } catch (Exception e) {
@@ -73,7 +78,7 @@ public class MaquinistaController {
      * @param id
      * @return
      */
-    // @Secured("ADMINISTRATIVO")
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/")
     public ResponseEntity<?> getMaquinista(@RequestParam Integer id) {
         try {
@@ -83,34 +88,38 @@ public class MaquinistaController {
         }
     }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
-    public ResponseEntity<?> getUsuariosActivos() {
+    public ResponseEntity<?> getUsuariosActivos(Pageable pageable) {
         try {
-            List<Maquinista> maquinistas = maquinistaServiceImpl.listActivos();
+            Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
             return ResponseEntity.status(HttpStatus.OK).body(mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistas));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre")
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre.toUpperCase()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/apellido")
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido.toUpperCase()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
     }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/legajo")
     public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
         try {
@@ -120,10 +129,11 @@ public class MaquinistaController {
         }
     }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/getAll")
-    public List<MaquinistaConsultaDTO> getAllMaquinistas() throws Exception {
+    public List<MaquinistaConsultaDTO> getAllMaquinistas(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll());
+            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

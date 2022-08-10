@@ -2,6 +2,7 @@ package com.javatechie.crud.example.utils.mapperDto;
 
 import com.javatechie.crud.example.dto.ObrasActivasDTO;
 import com.javatechie.crud.example.entity.Obra;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class MapperObrasDTO {
      * @return
      * @throws Exception
      */
-    public List<ObrasActivasDTO> mapperDtoObrasActivas(List<Obra> entities) throws Exception {
+    public List<ObrasActivasDTO> mapperDtoObrasActivas(Page<Obra> entities) throws Exception {
         try {
             List<ObrasActivasDTO> entitiesDto = new ArrayList<>();
             for (Obra auxObras : entities) {
@@ -40,12 +41,12 @@ public class MapperObrasDTO {
         try {
             ObrasActivasDTO dto = ObrasActivasDTO.builder() // ver si anda
                     .obraId(entity.getObraId())
-                    .descripcion(entity.getDescripcion())
-                    .Provincia(entity.getProvincia().getDescriptionProvincia())
-                    .Localidad(entity.getLocalidad().getDescripcionLocalidad())
-                    .gerente(entity.getGerente().getApellido().concat(" " + entity.getGerente().getApellido()))
-                    .jefe(entity.getJefe().getApellido().concat(" " + entity.getJefe().getApellido()))
-                    .administrativo(entity.getAdmin().getApellido().concat(" " + entity.getAdmin().getApellido()))
+                    .descripcion(entity.getDescripcion().toUpperCase())
+                    .Provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
+                    .Localidad(entity.getLocalidad().getDescripcionLocalidad().toUpperCase())
+                    .gerente(entity.getGerente().getApellido().toUpperCase().concat(" " + entity.getGerente().getNombre().toUpperCase()))
+                    .jefe(entity.getJefe().getApellido().toUpperCase().concat(" " + entity.getJefe().getNombre().toUpperCase()))
+                    .administrativo(entity.getAdmin().getApellido().toUpperCase().concat(" " + entity.getAdmin().getNombre().toUpperCase()))
                     .build();
             return dto;
         } catch (Exception e) {

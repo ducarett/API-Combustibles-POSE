@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ProvinciaService extends BaseService<Provincia,Integer >{
 
-    List<String> listaProvincias() throws Exception;
+    List<Provincia> listaProvincias() throws Exception;
 }

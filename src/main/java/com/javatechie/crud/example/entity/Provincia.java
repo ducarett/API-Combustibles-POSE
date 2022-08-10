@@ -24,4 +24,5 @@ public class Provincia implements Serializable {
 
     @Column(name = "DESC_PROVINCIA")
     private String descriptionProvincia;
+    
 }
