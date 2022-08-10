@@ -86,7 +86,7 @@ public class LocalidadController {
     @GetMapping("/{id}")
     public Localidad getLocalidad(@PathVariable Integer id) throws Exception {
         try {
-            return localidadServiceImpl.findById(id);
+            return localidadServiceImpl.getById(id);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

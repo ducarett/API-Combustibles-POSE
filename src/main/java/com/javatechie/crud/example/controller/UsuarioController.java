@@ -1,5 +1,6 @@
 package com.javatechie.crud.example.controller;
 
+import com.javatechie.crud.example.service.interfaz.ProcessUsuarioService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
@@ -22,24 +23,23 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/user")
 public class UsuarioController {
-    
-    private static final String FAILED_PROCESS = "Error: por favor intentelo mas tarde";
-  
+    private static final String FAILED_PROCESS = "Error al ejecutar el proceso, ";
     private final UsuarioServiceImpl userServiceImpl;
-  
     private final MapperUsuariosDTO mapperUsuariosDTO;
-   
     private final CompleteCamposUsuarios completeCamposUsuarios;
-
     private final MetodosUsuariosUtils metodosUsuariosUtils;
 
+    private final ProcessUsuarioService processUsuarioService;
+
     public UsuarioController(UsuarioServiceImpl userServiceImpl, MapperUsuariosDTO mapperUsuariosDTO,
-            CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils) {
+                             CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils,
+                             ProcessUsuarioService processUsuarioService) {
         this.userServiceImpl = userServiceImpl;
         this.mapperUsuariosDTO = mapperUsuariosDTO;
         this.completeCamposUsuarios = completeCamposUsuarios;
         this.metodosUsuariosUtils = metodosUsuariosUtils;
-    }    
+        this.processUsuarioService = processUsuarioService;
+    }
 
     /**
      * lista los usuarios activos.
@@ -54,7 +54,7 @@ public class UsuarioController {
             Page<Usuario> usuarios = userServiceImpl.listarActivos(pageable);
             return ResponseEntity.status(HttpStatus.OK).body(mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarios));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(FAILED_PROCESS);
         }
     }
 
@@ -99,7 +99,7 @@ public class UsuarioController {
     @GetMapping("/")
     public ResponseEntity<?> getUsuario(@RequestParam Integer id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.findById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.getById(id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(FAILED_PROCESS);
         }
@@ -115,7 +115,7 @@ public class UsuarioController {
     @PostMapping("/create")
     public ResponseEntity<?> createUsuario(@RequestBody Usuario entity) {
         try {
-            entity.setLogin(metodosUsuariosUtils.comprobarUserNameRepetido(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido())));
+            entity.setLogin(metodosUsuariosUtils.crearUserName(entity.getNombre(), entity.getApellido()));
             entity.setPassword(BCrypt.hashpw(entity.getPassword().toUpperCase(), BCrypt.gensalt()));
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.save(completeCamposUsuarios.usuarioCamposAlta(entity)));
         } catch (Exception e) {
@@ -128,25 +128,16 @@ public class UsuarioController {
      * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
      *
      * @param id
-     * @param entity
+     * @param usuario
      * @return
      */
     // @Secured(("ADMINISTRADOR"))
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario entity) { // ver de mejorar esto
+    public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
         try {
-            
-            return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
-
-            /*
-            if (!metodosUsuariosUtils.comprobarCampos(entity, id)) {
-                entity.setLogin(userServiceImpl.crearUserName(entity.getNombre(), entity.getApellido()));
-                return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.update(id, completeCamposUsuarios.usuarioCamposMod(entity)));
-            }
-            */
-            // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"uno de los campos ya existe\"}");
+            return ResponseEntity.status(HttpStatus.OK).body(processUsuarioService.actualizarUsuario(id,usuario));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -193,9 +184,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/nombre")
-    public List<UserDTO> searchForNombre(@RequestParam String name,Pageable pageable) throws Exception {
+    public List<UserDTO> searchForNombre(@RequestParam String name, Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorNombre(name.toUpperCase(),pageable);
+            return userServiceImpl.listarPorNombre(name.toUpperCase(), pageable);
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage());
         }
@@ -210,9 +201,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/apellido")
-    public List<UserDTO> searchForApellido(@RequestParam String lastName,Pageable pageable) throws Exception {
+    public List<UserDTO> searchForApellido(@RequestParam String lastName, Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorApellido(lastName.toUpperCase(),pageable);
+            return userServiceImpl.listarPorApellido(lastName.toUpperCase(), pageable);
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage());
         }
@@ -227,9 +218,9 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/cargo")
-    public List<UserDTO> searchForCargo(@RequestParam String position,Pageable pageable) throws Exception {
+    public List<UserDTO> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
         try {
-            return userServiceImpl.listarPorCargo(position.toUpperCase(),pageable);
+            return userServiceImpl.listarPorCargo(position.toUpperCase(), pageable);
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage());
         }
@@ -280,7 +271,8 @@ public class UsuarioController {
     @PutMapping("/updatePass")
     public Usuario updatePassword(@RequestParam String pass, @RequestParam String newPassConf, @RequestParam Integer id, @RequestParam String newPass) throws Exception {
         try {
-            return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
+            //return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
+            return null;
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage() + ". Error al actualizar password");
         }
@@ -330,7 +322,7 @@ public class UsuarioController {
         try {
             return userServiceImpl.listaAdministrativos(pageable);
         } catch (Exception e) {
-            throw new Exception(FAILED_PROCESS + e.getMessage() );
+            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 }

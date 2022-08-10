@@ -87,7 +87,7 @@ public class ObraController {
     @GetMapping("/search/{id}")
     public Obra searchForObraID(@PathVariable Integer id) throws Exception {
         try {
-            return obraServiceImpl.findById(id);
+            return obraServiceImpl.getById(id);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

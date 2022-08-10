@@ -13,6 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "USUARIOS")
+@EqualsAndHashCode(of = {"usuarioId"}, callSuper = false)
 public class Usuario extends EntityBase implements Serializable {
 
     @Id
@@ -31,7 +32,7 @@ public class Usuario extends EntityBase implements Serializable {
     private String mail;
 
     @Column(name = "CELULAR")
-    private int celular;
+    private Integer celular;
 
     @Column(name = "LOGIN")
     private String login;
@@ -42,11 +43,11 @@ public class Usuario extends EntityBase implements Serializable {
     @Column(name = "LEGAJO")
     private int legajo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CARGO")
     private Cargo cargo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPO_USUARIO")
     private TipoUsuario tipoUsuario;
 

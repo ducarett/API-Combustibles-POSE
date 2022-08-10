@@ -3,19 +3,18 @@ package com.javatechie.crud.example.entity;
 import javax.persistence.*;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serializable;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "OBRAS")
+@EqualsAndHashCode(of = {"obraId"}, callSuper = false)
 public class Obra extends EntityBase implements Serializable {
 
     @Id
@@ -30,35 +29,35 @@ public class Obra extends EntityBase implements Serializable {
     @Column(name = "DESC_OBRA")
     private String descripcion;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PROVINCIA")
     private Provincia provincia;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_LOCALIDAD")
     private Localidad localidad;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_GERENTE")
     private Usuario gerente;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_JEFE")
     private Usuario jefe;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ADM")
     private Usuario admin;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ALTA")
     private Usuario usuarioAlta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_MOD")
     private Usuario usuarioMod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 

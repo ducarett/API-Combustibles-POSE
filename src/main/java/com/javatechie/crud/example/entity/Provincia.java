@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "PROVINCIAS")
+@EqualsAndHashCode(of = {"provinciaId"},callSuper = false)
 public class Provincia implements Serializable {
 
     @Id

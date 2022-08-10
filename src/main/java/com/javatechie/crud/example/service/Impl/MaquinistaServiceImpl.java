@@ -41,7 +41,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     public boolean bajaMaquinista(Integer id) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                Maquinista maquinistaInactive = findById(id);
+                Maquinista maquinistaInactive = getById(id);
                 completeCampos.maquinistaCamposBaja(maquinistaInactive);
                 interfaceBaseRepository.save(maquinistaInactive);
                 return true;

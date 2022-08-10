@@ -66,7 +66,7 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
      */
     @Override
     @Transactional
-    public E findById(ID id) throws Exception {
+    public E getById(ID id) throws Exception {
         try {
             Optional<E> entityOptional = interfaceBaseRepository.findById(id);
             return entityOptional.get();

@@ -82,7 +82,7 @@ public class MaquinistaController {
     @GetMapping("/")
     public ResponseEntity<?> getMaquinista(@RequestParam Integer id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.findById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.getById(id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }

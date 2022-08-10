@@ -198,7 +198,7 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
     public boolean bajaObra(Integer id) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                Obra obraInactive = findById(id);
+                Obra obraInactive = getById(id);
                 completeDatos.obraCamposBaja(obraInactive);
                 interfaceBaseRepository.save(obraInactive);
                 return true;

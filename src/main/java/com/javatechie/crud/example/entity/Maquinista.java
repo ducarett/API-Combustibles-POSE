@@ -4,10 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Builder
@@ -16,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 @Entity
 @Table(name = "MAQUINISTAS")
+@EqualsAndHashCode(of = {"maquinistaId"}, callSuper = false)
 public class Maquinista extends EntityBase implements Serializable {
 
     @Id
@@ -33,15 +31,15 @@ public class Maquinista extends EntityBase implements Serializable {
     @Column(name = "LEGAJO")
     private int legajo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ALTA")
     private Usuario usuarioAlta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_MOD")
     private Usuario usuarioMod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 
