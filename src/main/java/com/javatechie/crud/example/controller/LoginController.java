@@ -37,14 +37,14 @@ public class LoginController {
 
         Usuario usuario = userServiceImpl.getPorLogin(user);
 
-    //    if (usuario == null || !usuario.getLogin().equals(user)) {
-     //       throw new Exception("{\"error\":\" usuario incorrecto.\"}");
+        if (usuario == null || !usuario.getLogin().equals(user)) {
+            throw new Exception("{\"error\":\" usuario incorrecto.\"}");
             //return new ResponseEntity<String>("{\"error\":\" usuario incorrecto.\"}", HttpStatus.BAD_REQUEST);
-    //    }
-    //    if (!BCrypt.checkpw(password, usuario.getPassword())) {
-    //        throw new Exception("{\"error\":\" password incorrecto.\"}");
+        }
+        if (!BCrypt.checkpw(password, usuario.getPassword())) {
+            throw new Exception("{\"error\":\" password incorrecto.\"}");
             //return new ResponseEntity<String>("{\"error\":\" password incorrecto.\"}", HttpStatus.BAD_REQUEST);
-    //    }
+        }
 
         UserLoginDto userLoginDto = mapperUsuariosDTO.mapperUserToUserDto(usuario);
         userLoginDto.setJwt(getJWTToken(user, usuario.getTipoUsuario().getDescripcion()));
@@ -71,7 +71,7 @@ public class LoginController {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .setExpiration(new Date(System.currentTimeMillis() + 60000))
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
