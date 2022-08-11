@@ -27,7 +27,7 @@ public class ProccesUsuarioServiceImpl implements ProcessUsuarioService {
     @Override
     public Usuario actualizarUsuario(Integer id, Usuario usuario) throws Exception {
         try {
-            verificarDatosEnBase(usuario) ? ;
+            verificarDatosEnBase(usuario) ;
             usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
             return userService.updateUser(id, usuario);
         } catch (Exception e) {
