@@ -13,7 +13,7 @@ public interface BaseService<E, ID extends Serializable> {
     List<E> findAll() throws Exception;
 
     Page<E> findAll(Pageable pageable) throws Exception;
-    E findById(ID id) throws Exception;
+    E getById(ID id) throws Exception;
 
     E save(E entity) throws Exception;
 

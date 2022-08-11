@@ -21,38 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class MetodosUsuariosUtils {
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioServiceImpl usuarioServiceImpl;
-
-    /**
-     * comprueba que los capos no exsitan antes de modificar un usuario.
-     */
-  /*  public boolean comprobarCampos(Usuario entity, Integer id) throws Exception {
-        try {
-            Optional<Usuario> optional = usuarioRepository.findById(id);
-            Usuario user = optional.get();
-            if ((usuarioRepository.findByMail(entity.getMail()).isEmpty()) || (entity.getMail().equals(user.getMail()))) {
-                return false;
-            } else if ((usuarioRepository.findByCelular(entity.getCelular()).isEmpty()) || (entity.getCelular() == user.getCelular())) {
-                return false;
-            } /*else if ((usuarioRepository.findByLegajo(entity.getLegajo()).isEmpty()) || (entity.getLegajo() == user.getLegajo())) {
-                return false;
-            } else {
-                return true;
-            }S
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public MetodosUsuariosUtils(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
-    */
 
-
-    public Usuario cambiarClave(String pass,String newPass,String newPassConf, Integer id) throws Exception {
+    /* public Usuario cambiarClave(String pass,String newPass,String newPassConf, Integer id) throws Exception {
         try {
-            Usuario user = usuarioServiceImpl.findById(id);
+           // Usuario user = usuarioServiceImpl.getById(id);
             if (!BCrypt.checkpw(pass, user.getPassword())) {
                 if (newPass.equals(newPassConf)) {
                     user.setPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
@@ -72,6 +49,8 @@ public class MetodosUsuariosUtils {
         }
     }
 
+    */
+
     public List<String> listarAlfabeticamenteNomApell(Page<Usuario> entities) {
         return entities.stream()
                 .sorted(Comparator.comparing(e -> e.getApellido().concat(" " + e.getNombre())))
@@ -81,13 +60,31 @@ public class MetodosUsuariosUtils {
     }
 
     /**
+     * construye el UserName(login) con la primer letra del nombre y concatena el apellido.
+     *
+     * @param nombre
+     * @param apellido
+     * @return
+     * @throws Exception
+     */
+    public String crearUserName(String nombre, String apellido) throws Exception {
+        try {
+            nombre = nombre.substring(0, 1);
+            return comprobarUserNameRepetido(nombre.concat(apellido).toUpperCase());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
+    /**
      * busca en la base de datos si el userName existe, en el caso de true le concatena un numero al final de manera ascendente, encaso de false lo persiste sin ningun cambio.
      *
      * @param userName
      * @return
      * @throws Exception
      */
-    public String comprobarUserNameRepetido(String userName) throws Exception {
+    private String comprobarUserNameRepetido(String userName) throws Exception {
         try {
             return verificarUserName(userName);
         } catch (Exception e) {

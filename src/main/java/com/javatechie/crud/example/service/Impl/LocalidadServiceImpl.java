@@ -73,7 +73,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     public boolean bajaLocalidad(Integer id) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                Localidad localidadInactive = findById(id);
+                Localidad localidadInactive = getById(id);
                 completeCampos.localidadCamposBaja(localidadInactive);
                 interfaceBaseRepository.save(localidadInactive);
                 return true;
@@ -95,7 +95,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     @Override
     public String buscarPorId(Integer id) throws Exception {
         try {
-            Localidad localidad = findById(id);
+            Localidad localidad = getById(id);
             return localidad.getDescripcionLocalidad().toUpperCase();
         } catch (Exception e) {
             throw new Exception(e.getMessage());

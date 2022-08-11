@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "CARGOS")
+@EqualsAndHashCode(of = {"cargoId"}, callSuper = false)
 public class Cargo implements Serializable {
 
     @Id

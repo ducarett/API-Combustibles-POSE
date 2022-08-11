@@ -1,6 +1,7 @@
 package com.javatechie.crud.example.service.Impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
@@ -9,6 +10,7 @@ import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,20 +19,21 @@ import org.springframework.stereotype.Service;
 
 import com.javatechie.crud.example.repository.UsuarioRepository;
 
+@Slf4j
 @Service
 public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implements UsuarioService {
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
     private CompleteCamposUsuarios completeCamposUsuarios;
-    @Autowired
     private MapperUsuariosDTO mapperUsuariosDTO;
-    @Autowired
     private MetodosUsuariosUtils metodosUsuariosUtils;
 
-    public UsuarioServiceImpl(InterfaceBaseRepository<Usuario, Integer> interfaceBaseRepository) {
+    public UsuarioServiceImpl(InterfaceBaseRepository<Usuario, Integer> interfaceBaseRepository, UsuarioRepository usuarioRepository, CompleteCamposUsuarios completeCamposUsuarios,
+                              MapperUsuariosDTO mapperUsuariosDTO, MetodosUsuariosUtils metodosUsuariosUtils) {
         super(interfaceBaseRepository);
+        this.usuarioRepository = usuarioRepository;
+        this.completeCamposUsuarios = completeCamposUsuarios;
+        this.mapperUsuariosDTO = mapperUsuariosDTO;
+        this.metodosUsuariosUtils = metodosUsuariosUtils;
     }
 
     /**
@@ -40,9 +43,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorNombre(String nombre,Pageable pageable) throws Exception {
+    public List<UserDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByNombre(nombre,pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByNombre(nombre, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -57,7 +60,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     @Override
     public List<UserDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByApellido(apellido,pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByApellido(apellido, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -70,9 +73,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorCargo(String cargo,Pageable pageable) throws Exception {
+    public List<UserDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByCargo(cargo,pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByCargo(cargo, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -87,7 +90,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     @Override
     public UserDTO buscarPorLegajo(Integer legajo) throws Exception {
         try {
-            return new ModelMapper().map(usuarioRepository.findByLegajo(legajo),UserDTO.class);
+            return new ModelMapper().map(usuarioRepository.findByLegajo(legajo), UserDTO.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -136,7 +139,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     public boolean bajaUsuario(Integer id) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(findById(id)));
+                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(getById(id)));
                 return true;
             } else {
                 throw new Exception();
@@ -145,24 +148,6 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
             throw new Exception(e.getMessage());
         }
     }
-
-    /**
-     * construye el UserName(login) con la primer letra del nombre y concatena el apellido.
-     *
-     * @param nombre
-     * @param apellido
-     * @return
-     * @throws Exception
-     */
-    public String crearUserName(String nombre, String apellido) throws Exception {
-        try {
-            nombre = nombre.substring(0, 1);
-            return nombre.concat(apellido).toUpperCase();
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
 
     /**
      * devuelve una lista de los usuarios activos.
@@ -234,6 +219,23 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     public List<String> listaAdministrativos(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListAdministrativo(pageable));
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Usuario updateUser(Integer id, Usuario usuario) throws Exception {
+        try {
+            log.info("Verificando la existencia del usuario con id {}", id);
+            if (usuarioRepository.existsById(id)) {
+                log.info("el usuario {} con id {}, existe!", usuario.getApellido().concat(" " + usuario.getNombre()), id);
+                Usuario usuarioactualizado = getById(id);
+                completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario);
+                return save(usuarioactualizado);
+            } else {
+                throw new Exception("El usuario no existe");
+            }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
