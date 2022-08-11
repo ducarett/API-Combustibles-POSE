@@ -30,8 +30,6 @@ public class LoginController {
     @Autowired
     private MapperUsuariosDTO mapperUsuariosDTO;
 
-
-    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping()
     public ResponseEntity<UserLoginDto> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
 
