@@ -110,4 +110,12 @@ public class MapperUsuariosDTO {
             throw new Exception(e.getMessage());
         }
     }
+
+    public UserLoginDto mapperUserToUserDto(Usuario usuario) throws Exception {
+        try {
+            return modelMapper.map(usuario, UserLoginDto.class);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }
