@@ -1,6 +1,6 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.service.interfaz.ProcessUsuarioService;
+import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
@@ -29,16 +29,16 @@ public class UsuarioController {
     private final CompleteCamposUsuarios completeCamposUsuarios;
     private final MetodosUsuariosUtils metodosUsuariosUtils;
 
-    private final ProcessUsuarioService processUsuarioService;
+    private final UsuarioFactoryService usuarioFactoryService;
 
     public UsuarioController(UsuarioServiceImpl userServiceImpl, MapperUsuariosDTO mapperUsuariosDTO,
                              CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils,
-                             ProcessUsuarioService processUsuarioService) {
+                             UsuarioFactoryService usuarioFactoryService) {
         this.userServiceImpl = userServiceImpl;
         this.mapperUsuariosDTO = mapperUsuariosDTO;
         this.completeCamposUsuarios = completeCamposUsuarios;
         this.metodosUsuariosUtils = metodosUsuariosUtils;
-        this.processUsuarioService = processUsuarioService;
+        this.usuarioFactoryService = usuarioFactoryService;
     }
 
     /**
@@ -135,7 +135,7 @@ public class UsuarioController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(processUsuarioService.actualizarUsuario(id,usuario));
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioFactoryService.actualizarUsuario(id,usuario));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS + e.getMessage());
         }

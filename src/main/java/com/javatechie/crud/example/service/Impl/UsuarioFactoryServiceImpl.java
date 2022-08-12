@@ -1,7 +1,7 @@
 package com.javatechie.crud.example.service.Impl;
 
 import com.javatechie.crud.example.entity.Usuario;
-import com.javatechie.crud.example.service.interfaz.ProcessUsuarioService;
+import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
@@ -9,14 +9,14 @@ import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProccesUsuarioServiceImpl implements ProcessUsuarioService {
+public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
 
     private final UsuarioService userService;
     private final MapperUsuariosDTO mapperUsuariosDTO;
     private final CompleteCamposUsuarios completeCamposUsuarios;
     private final MetodosUsuariosUtils metodosUsuariosUtils;
 
-    public ProccesUsuarioServiceImpl(UsuarioService userService, MapperUsuariosDTO mapperUsuariosDTO,
+    public UsuarioFactoryServiceImpl(UsuarioService userService, MapperUsuariosDTO mapperUsuariosDTO,
                                      CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils) {
         this.userService = userService;
         this.mapperUsuariosDTO = mapperUsuariosDTO;

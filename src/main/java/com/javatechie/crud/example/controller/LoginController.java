@@ -24,26 +24,29 @@ import java.util.stream.Collectors;
 @RestController
 public class LoginController {
 
-    @Autowired
     private UsuarioServiceImpl userServiceImpl;
 
-    @Autowired
     private MapperUsuariosDTO mapperUsuariosDTO;
 
+    public LoginController(UsuarioServiceImpl userServiceImpl, MapperUsuariosDTO mapperUsuariosDTO) {
+        this.userServiceImpl = userServiceImpl;
+        this.mapperUsuariosDTO = mapperUsuariosDTO;
+    }
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping()
-    public ResponseEntity<UserLoginDto> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
+    public ResponseEntity<?> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
+        String userName = user.toUpperCase();
+        String pass = password.toUpperCase();
+        Usuario usuario = userServiceImpl.getPorLogin(userName);
 
-        Usuario usuario = userServiceImpl.getPorLogin(user);
+        if (usuario == null || !usuario.getLogin().equals(userName)) {
 
-        if (usuario == null || !usuario.getLogin().equals(user)) {
-            throw new Exception("{\"error\":\" usuario incorrecto.\"}");
-            //return new ResponseEntity<String>("{\"error\":\" usuario incorrecto.\"}", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" usuario incorrecto.\"}");
         }
-        if (!BCrypt.checkpw(password, usuario.getPassword())) {
-            throw new Exception("{\"error\":\" password incorrecto.\"}");
-            //return new ResponseEntity<String>("{\"error\":\" password incorrecto.\"}", HttpStatus.BAD_REQUEST);
+        if (!BCrypt.checkpw(pass, usuario.getPassword())) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" password incorrecto.\"}");
         }
 
         UserLoginDto userLoginDto = mapperUsuariosDTO.mapperUserToUserDto(usuario);
