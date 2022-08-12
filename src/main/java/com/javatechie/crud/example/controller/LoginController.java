@@ -41,14 +41,10 @@ public class LoginController {
         Usuario usuario = userServiceImpl.getPorLogin(userName);
 
         if (usuario == null || !usuario.getLogin().equals(userName)) {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" usuario incorrecto.\"}");
-        }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" usuario incorrecto.\"}");        }
         if (!BCrypt.checkpw(pass, usuario.getPassword())) {
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" password incorrecto.\"}");
         }
-
         UserLoginDto userLoginDto = mapperUsuariosDTO.mapperUserToUserDto(usuario);
         userLoginDto.setJwt(getJWTToken(user, usuario.getTipoUsuario().getDescripcion()));
         return ResponseEntity.status(HttpStatus.OK).body(userLoginDto);
