@@ -19,8 +19,6 @@ import java.io.Serializable;
 public class Provincia implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "ID_PROVINCIA")
     private int provinciaId;
 

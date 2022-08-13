@@ -24,48 +24,40 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
         this.metodosUsuariosUtils = metodosUsuariosUtils;
     }
 
+    /**
+     * servicio para editar usuario verificando cada campo
+     *
+     * @param id
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
     @Override
-    public Usuario actualizarUsuario(Integer id, Usuario usuario) throws Exception {
+    public Usuario actualizarUsuario(Integer id, Integer adminId, Usuario usuario) throws Exception {
         try {
-            verificarDatosEnBase(usuario) ;
-            usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
-            return userService.updateUser(id, usuario);
+            if (completeCamposUsuarios.verificarIgualdadEnBase(usuario, id)) {
+                if (completeCamposUsuarios.verificarUsername(usuario, id))
+                    usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
+            }
+            return userService.updateUser(id, usuario,adminId);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    private boolean verificarDatosEnBase(Usuario usuario) throws Exception {
-        try {
-            if (completeCamposUsuarios.comprobarLegajo(usuario.getLegajo())) {
-                throw new Exception("Este legajo ya existe!");
-            }
-            if (completeCamposUsuarios.comprobarCelular(usuario.getCelular())) {
-                throw new Exception("Este celular ya existe!");
-            }
-            if (completeCamposUsuarios.comprobarMail(usuario.getMail())) {
-                throw new Exception("Este mail ya existe!");
-            }
-            return true;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
+    /**
+     * Servicio para crear usuario nuevo
+     *
+     * @param usuario
+     * @param adminId
+     * @return
+     */
+    public Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception {
 
-    private boolean verificarIgualdadEnBase(Usuario usuario) throws Exception {
-        try {
-            if (completeCamposUsuarios.comprobarLegajo(usuario.getLegajo())) {
-                throw new Exception("Este legajo ya existe!");
-            }
-            if (completeCamposUsuarios.comprobarCelular(usuario.getCelular())) {
-                throw new Exception("Este celular ya existe!");
-            }
-            if (completeCamposUsuarios.comprobarMail(usuario.getMail())) {
-                throw new Exception("Este mail ya existe!");
-            }
-            return true;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
+        metodosUsuariosUtils.encriptarClave(usuario);
+        completeCamposUsuarios.verificarDatosEnBase(usuario);
+        completeCamposUsuarios.usuarioCamposAlta(usuario, adminId);
+        return userService.save(usuario);
     }
 }

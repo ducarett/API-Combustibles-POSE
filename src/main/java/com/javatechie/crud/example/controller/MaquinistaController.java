@@ -4,6 +4,7 @@ import com.javatechie.crud.example.utils.complete.CompleteCamposMaquinistas;
 import com.javatechie.crud.example.dto.MaquinistaConsultaDTO;
 import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.service.Impl.MaquinistaServiceImpl;
+import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.mapperDto.MapperMaquinistasDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequestMapping("/maquinista")
@@ -28,6 +30,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> crearMaquinista(@RequestBody Maquinista entity) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.save(completeCampos.maquinistaCamposAlta(entity)));
@@ -46,6 +49,7 @@ public class MaquinistaController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> modificarMaquinista(@PathVariable int id, @RequestBody Maquinista entity) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.update(id, completeCampos.maquinistaCamposMod(entity)));
@@ -64,6 +68,7 @@ public class MaquinistaController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> bajaMaquinista(@PathVariable int id) {
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(maquinistaServiceImpl.bajaMaquinista(id));
@@ -80,6 +85,7 @@ public class MaquinistaController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinista(@RequestParam Integer id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.getById(id));
@@ -90,6 +96,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUsuariosActivos(Pageable pageable) {
         try {
             Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
@@ -101,6 +108,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre.toUpperCase()));
@@ -111,6 +119,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/apellido")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido.toUpperCase()));
@@ -121,6 +130,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/legajo")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorLegajo(id));
@@ -131,6 +141,7 @@ public class MaquinistaController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/getAll")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<MaquinistaConsultaDTO> getAllMaquinistas(Pageable pageable) throws Exception {
         try {
             return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll(pageable));

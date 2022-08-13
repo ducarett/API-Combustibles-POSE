@@ -6,12 +6,14 @@ import com.javatechie.crud.example.utils.complete.CompleteCamposLocalidad;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.service.Impl.LocalidadServiceImpl;
+import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.mapperDto.MapperLocalidadesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -35,6 +37,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/provincia/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getAllLocalidades(@PathVariable Integer id) throws Exception {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.listLocalidades(id));
@@ -51,6 +54,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> createLocalidad(@RequestBody Localidad entity) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.save(completeCampos.localidadCamposAlta(entity)));
@@ -67,6 +71,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> bajaLocalidad(@PathVariable int id) {
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(localidadServiceImpl.bajaLocalidad(id));
@@ -84,6 +89,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public Localidad getLocalidad(@PathVariable Integer id) throws Exception {
         try {
             return localidadServiceImpl.getById(id);
@@ -101,6 +107,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public String getNombreLocalidad(@PathVariable Integer id) throws Exception {
         try {
             return localidadServiceImpl.buscarPorId(id);
@@ -118,6 +125,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> updateLocalidad(@PathVariable int id, @RequestBody Localidad entity) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.update(id, completeCampos.localidadCamposMod(entity)));
@@ -134,6 +142,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<LocalidadDTO> listLocalidadesActivas() throws Exception {
         try {
             return localidadServiceImpl.ordenarLocalidades();
@@ -151,6 +160,7 @@ public class LocalidadController {
      */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/all")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<LocalidadConsultaDTO> listLocalidadesActivasInactivas() throws Exception {
         try {
             return localidadServiceImpl.ordenarLocalidadesActivosInactivos();

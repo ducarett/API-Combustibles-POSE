@@ -21,22 +21,22 @@ public class Localidad extends EntityBase implements Serializable {
     @Column(name = "ID_LOCALIDAD")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_PROVINCIA")
     private Provincia provincia;
 
     @Column(name = "DESC_LOCALIDAD")
     private String descripcionLocalidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_ALTA")
     private Usuario usuarioAlta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_MOD")
     private Usuario usuarioMod;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 

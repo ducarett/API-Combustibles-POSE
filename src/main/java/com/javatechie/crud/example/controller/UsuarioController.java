@@ -2,6 +2,7 @@ package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserConsultaDTO;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -41,14 +43,65 @@ public class UsuarioController {
         this.usuarioFactoryService = usuarioFactoryService;
     }
 
+
+    /**
+     * Crea User nuevo, hardcodea los campos dateAdd y hourAdd con la fecha y hora actual del sistema, encripta la password.
+     *
+     * @param usuario
+     * @return
+     */
+    @PostMapping("/create")
+    @RolesAllowed(Constant.ROL_ADMINISTRADOR)
+    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario, @RequestHeader Integer adminId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioFactoryService.crearUsuario(usuario, adminId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS + e.getMessage());
+        }
+    }
+
+    /**
+     * Modifica la entidad User, antes de eso comprueba que los campos celular mail o legajo no esten repetidos.
+     * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
+     *
+     * @param id
+     * @param usuario
+     * @return
+     */
+    @PutMapping("/update/{id}")
+    @RolesAllowed(Constant.ROL_ADMINISTRADOR)
+    public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario, @RequestHeader Integer adminId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioFactoryService.actualizarUsuario(id, adminId, usuario));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS + e.getMessage());
+        }
+    }
+
+    /**
+     * Desactiva el User.
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/inactive/{id}")
+    @RolesAllowed(Constant.ROL_ADMINISTRADOR)
+    public ResponseEntity<?> bajaUsuario(@PathVariable int id) {
+        try {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
+        }
+    }
+
     /**
      * lista los usuarios activos.
      *
      * @param pageable
      * @return
      */
-    //@Secured({"ADMINISTRADOR", "ADMINISTRATIVO"})
     @GetMapping("/active")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUserActivos(Pageable pageable) {
         try {
             Page<Usuario> usuarios = userServiceImpl.listarActivos(pageable);
@@ -65,6 +118,7 @@ public class UsuarioController {
      * @return
      */
     @GetMapping("/inactive")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUerInactivos(Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(mapperUsuariosDTO.mapperDtoUsuarioInactivo(userServiceImpl.listarInactivos(pageable)));
@@ -81,6 +135,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/getAll")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<UserConsultaDTO> getAllUsuarios(Pageable pageable) throws Exception {
         try {
             return mapperUsuariosDTO.mapperDtoConsultaUsuarios(userServiceImpl.findAll(pageable));
@@ -97,81 +152,12 @@ public class UsuarioController {
      */
     // @Secured("ADMINISTRATIVO")
     @GetMapping("/")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUsuario(@RequestParam Integer id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.getById(id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(FAILED_PROCESS);
-        }
-    }
-
-    /**
-     * Crea User nuevo, hardcodea los campos dateAdd y hourAdd con la fecha y hora actual del sistema, encripta la password.
-     *
-     * @param entity
-     * @return
-     */
-    // @Secured(("ADMINISTRADOR"))
-    @PostMapping("/create")
-    public ResponseEntity<?> createUsuario(@RequestBody Usuario entity) {
-        try {
-            entity.setLogin(metodosUsuariosUtils.crearUserName(entity.getNombre(), entity.getApellido()));
-            entity.setPassword(BCrypt.hashpw(entity.getPassword().toUpperCase(), BCrypt.gensalt()));
-            return ResponseEntity.status(HttpStatus.OK).body(userServiceImpl.save(completeCamposUsuarios.usuarioCamposAlta(entity)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
-        }
-    }
-
-    /**
-     * Modifica la entidad User, antes de eso comprueba que los campos celular mail o legajo no esten repetidos.
-     * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
-     *
-     * @param id
-     * @param usuario
-     * @return
-     */
-    // @Secured(("ADMINISTRADOR"))
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(usuarioFactoryService.actualizarUsuario(id,usuario));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS + e.getMessage());
-        }
-    }
-
-    /**
-     * Desactiva el User.
-     *
-     * @param id
-     * @return
-     */
-    //@Secured(("ADMINISTRADOR"))
-    @DeleteMapping("/inactive/{id}")
-    public ResponseEntity<?> bajaUsuario(@PathVariable int id) { // ver de mejorar esto
-        try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
-        }
-    }
-
-    /**
-     * muestra el nombre de usuario del usuario logueado.
-     *
-     * @param auth
-     * @return
-     * @throws Exception
-     */
-    @GetMapping("/ver")
-    public String getUserLogueado(Authentication auth) throws Exception {
-        try {
-            String user = auth.getName().toUpperCase();
-            return user;
-
-        } catch (Exception e) {
-            throw new Exception(FAILED_PROCESS + e.getMessage());
         }
     }
 
@@ -184,6 +170,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/nombre")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<UserDTO> searchForNombre(@RequestParam String name, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorNombre(name.toUpperCase(), pageable);
@@ -201,6 +188,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/apellido")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<UserDTO> searchForApellido(@RequestParam String lastName, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorApellido(lastName.toUpperCase(), pageable);
@@ -218,6 +206,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/cargo")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<UserDTO> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorCargo(position.toUpperCase(), pageable);
@@ -233,7 +222,8 @@ public class UsuarioController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/search/login")
+    @GetMapping("/search/userName")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public UserDTO searchForLogin(@RequestParam String userName) throws Exception {
         try {
             return userServiceImpl.buscarPorLogin(userName.toUpperCase());
@@ -250,6 +240,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/search/legajo")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public UserDTO searchForlegajo(@RequestParam Integer legajo) throws Exception {
         try {
             return userServiceImpl.buscarPorLegajo(legajo);
@@ -269,10 +260,10 @@ public class UsuarioController {
      * @throws Exception
      */
     @PutMapping("/updatePass")
+    @RolesAllowed(Constant.ROL_ADMINISTRADOR)
     public Usuario updatePassword(@RequestParam String pass, @RequestParam String newPassConf, @RequestParam Integer id, @RequestParam String newPass) throws Exception {
         try {
-            //return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
-            return null;
+            return metodosUsuariosUtils.cambiarClave(pass, newPass, newPassConf, id);
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage() + ". Error al actualizar password");
         }
@@ -286,6 +277,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/gerentes")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<String> listGerentes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaGerentes(pageable);
@@ -302,6 +294,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/jefes")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<String> listJefes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaJefes(pageable);
@@ -318,6 +311,7 @@ public class UsuarioController {
      * @throws Exception
      */
     @GetMapping("/administrativos")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<String> listAdministrativos(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaAdministrativos(pageable);

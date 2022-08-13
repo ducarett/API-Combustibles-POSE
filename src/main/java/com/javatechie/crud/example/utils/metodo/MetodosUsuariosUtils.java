@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class MetodosUsuariosUtils {
@@ -27,10 +28,11 @@ public class MetodosUsuariosUtils {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /* public Usuario cambiarClave(String pass,String newPass,String newPassConf, Integer id) throws Exception {
+    public Usuario cambiarClave(String pass, String newPass, String newPassConf, Integer id) throws Exception {
         try {
-           // Usuario user = usuarioServiceImpl.getById(id);
-            if (!BCrypt.checkpw(pass, user.getPassword())) {
+            Optional<Usuario> userOptional = usuarioRepository.findById(id);
+            Usuario user = userOptional.get();
+            if (!descencriptarClave(pass, user.getPassword())) {
                 if (newPass.equals(newPassConf)) {
                     user.setPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
                     user.setFechaMod(LocalDate.now());
@@ -38,10 +40,10 @@ public class MetodosUsuariosUtils {
                     usuarioRepository.save(user);
                     log.info("Se cambio la clave con exito");
                     return user;
-                }else{
+                } else {
                     throw new Exception("Passwords no coinciden");
                 }
-            }else{
+            } else {
                 throw new Exception("Password incorrecta");
             }
         } catch (Exception e) {
@@ -49,7 +51,13 @@ public class MetodosUsuariosUtils {
         }
     }
 
-    */
+    public void encriptarClave(Usuario usuario) {
+        usuario.setPassword(BCrypt.hashpw(usuario.getPassword().toUpperCase(), BCrypt.gensalt()));
+    }
+
+    public boolean descencriptarClave(String passwordActual, String passwordEnBase) {
+       return BCrypt.checkpw(passwordActual, passwordEnBase) ? true : false;
+    }
 
     public List<String> listarAlfabeticamenteNomApell(Page<Usuario> entities) {
         return entities.stream()
@@ -94,6 +102,7 @@ public class MetodosUsuariosUtils {
 
     /**
      * SEPARA EL USERNAME EN LETRAS Y NUMEROS
+     *
      * @param userName
      * @return
      */
@@ -116,6 +125,7 @@ public class MetodosUsuariosUtils {
 
     /**
      * COMPRUEBA QUE EL USERNAME NO EXISTA Y EN EL CASO QUE SI LE CONCATENA UN NUMERO O LE SUMA PARA DISCRIMINARLO
+     *
      * @param userName
      * @param user
      * @param numero

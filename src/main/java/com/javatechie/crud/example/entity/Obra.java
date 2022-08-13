@@ -29,35 +29,35 @@ public class Obra extends EntityBase implements Serializable {
     @Column(name = "DESC_OBRA")
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_PROVINCIA")
     private Provincia provincia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_LOCALIDAD")
     private Localidad localidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_GERENTE")
     private Usuario gerente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_JEFE")
     private Usuario jefe;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_ADM")
     private Usuario admin;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_ALTA")
     private Usuario usuarioAlta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_MOD")
     private Usuario usuarioMod;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 

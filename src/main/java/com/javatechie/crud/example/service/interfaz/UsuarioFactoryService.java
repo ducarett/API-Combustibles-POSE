@@ -4,6 +4,8 @@ import com.javatechie.crud.example.entity.Usuario;
 
 public interface UsuarioFactoryService {
 
-    Usuario actualizarUsuario(Integer id, Usuario usuario) throws Exception;
+    Usuario actualizarUsuario(Integer id, Integer adminId, Usuario usuario) throws Exception;
+
+    Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception;
 
 }

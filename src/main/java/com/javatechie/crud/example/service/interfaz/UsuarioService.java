@@ -33,5 +33,5 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
 
     List<String> listaAdministrativos(Pageable pageable) throws Exception;
 
-    Usuario updateUser(Integer id, Usuario usuario) throws Exception;
+    Usuario updateUser(Integer id, Usuario usuario, Integer adminId) throws Exception;
 }

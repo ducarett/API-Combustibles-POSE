@@ -1,9 +1,6 @@
 package com.javatechie.crud.example.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +24,5 @@ public class TipoUsuario implements Serializable {
 
     @Column(name = "DESC_TIPO_USUARIO")
     private String descripcion;
+
 }

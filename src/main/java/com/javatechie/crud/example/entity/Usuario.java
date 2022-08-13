@@ -43,11 +43,11 @@ public class Usuario extends EntityBase implements Serializable {
     @Column(name = "LEGAJO")
     private int legajo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "ID_CARGO")
     private Cargo cargo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "TIPO_USUARIO")
     private TipoUsuario tipoUsuario;
 

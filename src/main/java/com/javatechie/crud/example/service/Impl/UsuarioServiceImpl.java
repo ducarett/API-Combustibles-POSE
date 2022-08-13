@@ -10,6 +10,7 @@ import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,13 +226,13 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     }
 
     @Override
-    public Usuario updateUser(Integer id, Usuario usuario) throws Exception {
+    public Usuario updateUser(Integer id, Usuario usuario, Integer adminId) throws Exception {
         try {
             log.info("Verificando la existencia del usuario con id {}", id);
             if (usuarioRepository.existsById(id)) {
                 log.info("el usuario {} con id {}, existe!", usuario.getApellido().concat(" " + usuario.getNombre()), id);
                 Usuario usuarioactualizado = getById(id);
-                completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario);
+                completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario,adminId);
                 return save(usuarioactualizado);
             } else {
                 throw new Exception("El usuario no existe");

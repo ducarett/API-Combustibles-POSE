@@ -31,15 +31,15 @@ public class Maquinista extends EntityBase implements Serializable {
     @Column(name = "LEGAJO")
     private int legajo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_ALTA")
     private Usuario usuarioAlta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_MOD")
     private Usuario usuarioMod;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 
