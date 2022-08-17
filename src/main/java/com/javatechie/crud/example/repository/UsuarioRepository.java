@@ -15,7 +15,7 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
 
     Usuario findByLogin(String login);
 
-    List<Usuario> findByCelular(Integer login);
+    List<Usuario> findByCelular(Long login);
 
     @Query(value = "SELECT * FROM usuarios u INNER JOIN cargos C ON U.ID_CARGO = C.ID_CARGOS WHERE C.DESC_CARGO = 'GERENTE' AND U.NOMBRE = :nomApell OR U.APELLIDO = :nomApell", nativeQuery = true)
     Usuario findUserIsGerente(@Param("nomApell") String dato);

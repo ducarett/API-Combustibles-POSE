@@ -3,6 +3,7 @@ package com.javatechie.crud.example.utils.metodo;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.UsuarioRepository;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,15 +25,18 @@ public class MetodosUsuariosUtils {
 
     private UsuarioRepository usuarioRepository;
 
-    public MetodosUsuariosUtils(UsuarioRepository usuarioRepository) {
+    private Encriptacion encriptacion;
+
+    public MetodosUsuariosUtils(UsuarioRepository usuarioRepository, Encriptacion encriptacion) {
         this.usuarioRepository = usuarioRepository;
+        this.encriptacion = encriptacion;
     }
 
     public Usuario cambiarClave(String pass, String newPass, String newPassConf, Integer id) throws Exception {
         try {
             Optional<Usuario> userOptional = usuarioRepository.findById(id);
             Usuario user = userOptional.get();
-            if (!descencriptarClave(pass, user.getPassword())) {
+            if (!encriptacion.descencriptarClave(pass, user.getPassword())) {
                 if (newPass.equals(newPassConf)) {
                     user.setPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
                     user.setFechaMod(LocalDate.now());
@@ -49,14 +53,6 @@ public class MetodosUsuariosUtils {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-    }
-
-    public void encriptarClave(Usuario usuario) {
-        usuario.setPassword(BCrypt.hashpw(usuario.getPassword().toUpperCase(), BCrypt.gensalt()));
-    }
-
-    public boolean descencriptarClave(String passwordActual, String passwordEnBase) {
-       return BCrypt.checkpw(passwordActual, passwordEnBase) ? true : false;
     }
 
     public List<String> listarAlfabeticamenteNomApell(Page<Usuario> entities) {

@@ -232,8 +232,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
             if (usuarioRepository.existsById(id)) {
                 log.info("el usuario {} con id {}, existe!", usuario.getApellido().concat(" " + usuario.getNombre()), id);
                 Usuario usuarioactualizado = getById(id);
-                completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario,adminId);
-                return save(usuarioactualizado);
+                return save(completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario,adminId));
             } else {
                 throw new Exception("El usuario no existe");
             }

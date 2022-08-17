@@ -2,18 +2,25 @@ package com.javatechie.crud.example.utils.complete;
 
 import com.javatechie.crud.example.entity.*;
 import com.javatechie.crud.example.repository.UsuarioRepository;
+import com.javatechie.crud.example.service.interfaz.Encriptacion;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CompleteCamposUsuarios {
     private UsuarioRepository usuarioRepository;
 
-    public CompleteCamposUsuarios(UsuarioRepository usuarioRepository) {
+    private Encriptacion encriptacion;
+
+    public CompleteCamposUsuarios(UsuarioRepository usuarioRepository, Encriptacion encriptacion) {
         this.usuarioRepository = usuarioRepository;
+        this.encriptacion = encriptacion;
     }
 
     /**
@@ -50,7 +57,7 @@ public class CompleteCamposUsuarios {
         }
     }
 
-    public Usuario setDatosModificados(Usuario usuarioAct, Usuario usuarioMod,Integer adminId) {
+    public Usuario setDatosModificados(Usuario usuarioAct, Usuario usuarioMod, Integer adminId) {
         usuarioAct.setNombre(usuarioMod.getNombre());
         usuarioAct.setApellido(usuarioMod.getApellido());
         usuarioAct.setMail(usuarioMod.getMail());
@@ -60,8 +67,9 @@ public class CompleteCamposUsuarios {
         usuarioAct.setLogin(usuarioMod.getLogin());
         usuarioAct.setFechaMod(LocalDate.now());
         usuarioAct.setHoraMod(LocalDateTime.now());
+        usuarioAct.setPassword(usuarioMod.getPassword());
         usuarioAct.setUsuarioMod(adminId);
-        return usuarioMod;
+        return usuarioAct;
     }
 
 
@@ -73,7 +81,7 @@ public class CompleteCamposUsuarios {
         return usuarioRepository.findByLegajo(legajo) != null ? true : false;
     }
 
-    public boolean comprobarCelular(Integer celular) {
+    public boolean comprobarCelular(Long celular) {
         return !usuarioRepository.findByCelular(celular).isEmpty() ? true : false;
     }
 
@@ -112,16 +120,18 @@ public class CompleteCamposUsuarios {
                     throw new Exception("Este mail ya existe!");
                 }
             }
+            usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword()));
             return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public boolean verificarUsername(Usuario usuario,Integer id) {
+    public boolean verificarUsername(Usuario usuario, Integer id) {
         Optional<Usuario> optional = usuarioRepository.findById(id);
         Usuario verificador = optional.get();
-        return !verificador.getNombre().equals(usuario.getNombre()) || !verificador.getApellido().equals(usuario.getApellido()) ? true : false;
+        return !verificador.getNombre().toUpperCase().equals(usuario.getNombre().toUpperCase()) ||
+                !verificador.getApellido().toUpperCase().equals(usuario.getApellido().toUpperCase()) ? true : false;
     }
 }
 

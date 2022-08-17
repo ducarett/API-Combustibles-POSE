@@ -1,6 +1,7 @@
 package com.javatechie.crud.example.service.Impl;
 
 import com.javatechie.crud.example.entity.Usuario;
+import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
 import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
@@ -16,12 +17,15 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
     private final CompleteCamposUsuarios completeCamposUsuarios;
     private final MetodosUsuariosUtils metodosUsuariosUtils;
 
+    private Encriptacion encriptacion;
+
     public UsuarioFactoryServiceImpl(UsuarioService userService, MapperUsuariosDTO mapperUsuariosDTO,
-                                     CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils) {
+                                     CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils,Encriptacion encriptacion) {
         this.userService = userService;
         this.mapperUsuariosDTO = mapperUsuariosDTO;
         this.completeCamposUsuarios = completeCamposUsuarios;
         this.metodosUsuariosUtils = metodosUsuariosUtils;
+        this.encriptacion = encriptacion;
     }
 
     /**
@@ -35,10 +39,10 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
     @Override
     public Usuario actualizarUsuario(Integer id, Integer adminId, Usuario usuario) throws Exception {
         try {
-            if (completeCamposUsuarios.verificarIgualdadEnBase(usuario, id)) {
-                if (completeCamposUsuarios.verificarUsername(usuario, id))
-                    usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
-            }
+            if (completeCamposUsuarios.verificarIgualdadEnBase(usuario, id))
+                usuario.setLogin( (completeCamposUsuarios.verificarUsername(usuario, id)) ?
+                        metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()):
+                        usuario.getLogin());
             return userService.updateUser(id, usuario,adminId);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -55,7 +59,7 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
     public Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception {
 
         usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
-        metodosUsuariosUtils.encriptarClave(usuario);
+        encriptacion.encriptarClave(usuario.getPassword());
         completeCamposUsuarios.verificarDatosEnBase(usuario);
         completeCamposUsuarios.usuarioCamposAlta(usuario, adminId);
         return userService.save(usuario);

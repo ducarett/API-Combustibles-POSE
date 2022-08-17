@@ -32,7 +32,7 @@ public class Usuario extends EntityBase implements Serializable {
     private String mail;
 
     @Column(name = "CELULAR")
-    private Integer celular;
+    private Long celular;
 
     @Column(name = "LOGIN")
     private String login;
