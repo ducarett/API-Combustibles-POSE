@@ -1,10 +1,10 @@
 package com.javatechie.crud.example.utils.complete;
 
+import org.apache.commons.lang3.StringUtils;
 import com.javatechie.crud.example.entity.*;
 import com.javatechie.crud.example.repository.UsuarioRepository;
 import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,16 +58,16 @@ public class CompleteCamposUsuarios {
     }
 
     public Usuario setDatosModificados(Usuario usuarioAct, Usuario usuarioMod, Integer adminId) {
-        usuarioAct.setNombre(usuarioMod.getNombre());
-        usuarioAct.setApellido(usuarioMod.getApellido());
+        usuarioAct.setNombre(usuarioMod.getNombre().toUpperCase());
+        usuarioAct.setApellido(usuarioMod.getApellido().toUpperCase());
         usuarioAct.setMail(usuarioMod.getMail());
         usuarioAct.setLegajo(usuarioMod.getLegajo());
         usuarioAct.setCelular(usuarioMod.getCelular());
         usuarioAct.setCargo(usuarioMod.getCargo());
-        usuarioAct.setLogin(usuarioMod.getLogin());
+        usuarioAct.setLogin(!StringUtils.isBlank(usuarioMod.getLogin()) ? usuarioMod.getLogin():usuarioAct.getLogin());
         usuarioAct.setFechaMod(LocalDate.now());
         usuarioAct.setHoraMod(LocalDateTime.now());
-        usuarioAct.setPassword(usuarioMod.getPassword());
+        usuarioAct.setPassword(!StringUtils.isBlank(usuarioMod.getPassword()) ? usuarioMod.getPassword():usuarioAct.getPassword());
         usuarioAct.setUsuarioMod(adminId);
         return usuarioAct;
     }
@@ -120,7 +120,9 @@ public class CompleteCamposUsuarios {
                     throw new Exception("Este mail ya existe!");
                 }
             }
-            usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword()));
+            if(!StringUtils.isBlank(usuario.getPassword())) {
+                usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword()));
+            }
             return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
