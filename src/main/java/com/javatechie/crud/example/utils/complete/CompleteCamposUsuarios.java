@@ -69,6 +69,7 @@ public class CompleteCamposUsuarios {
         usuarioAct.setHoraMod(LocalDateTime.now());
         usuarioAct.setPassword(!StringUtils.isBlank(usuarioMod.getPassword()) ? usuarioMod.getPassword():usuarioAct.getPassword());
         usuarioAct.setUsuarioMod(adminId);
+        usuarioAct.setTipoUsuario(usuarioMod.getTipoUsuario());
         return usuarioAct;
     }
 
