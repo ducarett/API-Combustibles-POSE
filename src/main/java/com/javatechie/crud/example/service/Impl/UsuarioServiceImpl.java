@@ -187,7 +187,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaGerentes(Pageable pageable) throws Exception {
+    public List<UserDTO> listaGerentes(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListGerente(pageable));
         } catch (Exception e) {
@@ -202,7 +202,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaJefes(Pageable pageable) throws Exception {
+    public List<UserDTO> listaJefes(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListJefes(pageable));
         } catch (Exception e) {
@@ -217,7 +217,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<String> listaAdministrativos(Pageable pageable) throws Exception {
+    public List<UserDTO> listaAdministrativos(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListAdministrativo(pageable));
         } catch (Exception e) {

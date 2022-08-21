@@ -27,11 +27,11 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
 
     Page<Usuario> listarInactivos(Pageable pageable) throws Exception;
 
-    List<String> listaGerentes(Pageable pageable) throws Exception;
+    List<UserDTO> listaGerentes(Pageable pageable) throws Exception;
 
-    List<String> listaJefes(Pageable pageable) throws Exception;
+    List<UserDTO> listaJefes(Pageable pageable) throws Exception;
 
-    List<String> listaAdministrativos(Pageable pageable) throws Exception;
+    List<UserDTO> listaAdministrativos(Pageable pageable) throws Exception;
 
     Usuario updateUser(Integer id, Usuario usuario, Integer adminId) throws Exception;
 }

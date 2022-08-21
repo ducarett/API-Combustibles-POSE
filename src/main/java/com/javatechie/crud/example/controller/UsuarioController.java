@@ -278,7 +278,7 @@ public class UsuarioController {
      */
     @GetMapping("/gerentes")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<String> listGerentes(Pageable pageable) throws Exception {
+    public List<UserDTO> listGerentes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaGerentes(pageable);
         } catch (Exception e) {
@@ -295,7 +295,7 @@ public class UsuarioController {
      */
     @GetMapping("/jefes")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<String> listJefes(Pageable pageable) throws Exception {
+    public List<UserDTO> listJefes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaJefes(pageable);
         } catch (Exception e) {
@@ -312,7 +312,7 @@ public class UsuarioController {
      */
     @GetMapping("/administrativos")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<String> listAdministrativos(Pageable pageable) throws Exception {
+    public List<UserDTO> listAdministrativos(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaAdministrativos(pageable);
         } catch (Exception e) {
