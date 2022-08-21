@@ -34,10 +34,10 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
     @Query(value = "SELECT distinct u FROM Usuario u INNER JOIN u.cargo c WHERE c.descripcionCargo = :cargo")
     Page<Usuario> findByCargo(@Param("cargo") String cargos, Pageable pageable);
 
-    @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 10 AND u.fechaBaja is null ")
+    @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 20 AND u.fechaBaja is null ")
     Page<Usuario> findListGerente(Pageable pageable);
 
-    @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 20 AND u.fechaBaja is null ")
+    @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 10 AND u.fechaBaja is null ")
     Page<Usuario> findListJefes(Pageable pageable);
 
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 30 AND u.fechaBaja is null ")
