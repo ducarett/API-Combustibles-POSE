@@ -46,13 +46,11 @@ public class CompleteCamposObras {
         }
     }
 
-    public Obra obraCamposMod(Obra entity) throws Exception {
+    public Obra obraCamposMod(Obra entity,Integer adminId) throws Exception {
         try {
             entity.setFechaMod(LocalDate.now());
             entity.setHoraMod(LocalDateTime.now());
-            Usuario usuarioMod = Usuario.builder()
-                    .usuarioId(1).build();
-            entity.setUsuarioMod(usuarioMod);
+            entity.setUsuarioMod(Usuario.builder().usuarioId(adminId).build());
             entity.setDescripcion(entity.getDescripcion().toUpperCase());
             entity.setNombreObra(entity.getNombreObra().toUpperCase());
             return entity;

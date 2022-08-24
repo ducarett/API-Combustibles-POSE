@@ -240,9 +240,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity) {
+    public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity,@RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.editarObra(id, completeCamposObras.obraCamposMod(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.editarObra(id, completeCamposObras.obraCamposMod(entity,adminId)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
