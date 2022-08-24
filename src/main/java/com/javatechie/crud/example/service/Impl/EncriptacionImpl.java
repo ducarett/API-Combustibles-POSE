@@ -1,6 +1,6 @@
 package com.javatechie.crud.example.service.Impl;
 
-import com.javatechie.crud.example.entity.Usuario;
+
 import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 public class EncriptacionImpl implements Encriptacion {
 
     public String encriptarClave(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        String clave = password.toUpperCase();
+        return BCrypt.hashpw(clave, BCrypt.gensalt());
     }
 
     public boolean descencriptarClave(String passwordActual, String passwordEnBase) {

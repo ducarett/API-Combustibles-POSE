@@ -34,7 +34,7 @@ public class LoginController {
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping()
-    public ResponseEntity<?> generate(@RequestHeader String user, @RequestHeader String password) throws Exception {
+    public ResponseEntity<?> login(@RequestHeader String user, @RequestHeader String password) throws Exception {
         String userName = user.toUpperCase();
         String pass = password.toUpperCase();
         Usuario usuario = userServiceImpl.getPorLogin(userName);

@@ -67,7 +67,9 @@ public class CompleteCamposUsuarios {
         usuarioAct.setLogin(!StringUtils.isBlank(usuarioMod.getLogin()) ? usuarioMod.getLogin():usuarioAct.getLogin());
         usuarioAct.setFechaMod(LocalDate.now());
         usuarioAct.setHoraMod(LocalDateTime.now());
-        usuarioAct.setPassword(!StringUtils.isBlank(usuarioMod.getPassword()) ? usuarioMod.getPassword():usuarioAct.getPassword());
+        if (!StringUtils.isBlank(usuarioMod.getPassword())) {
+            usuarioAct.setPassword(usuarioMod.getPassword());
+        }
         usuarioAct.setUsuarioMod(adminId);
         usuarioAct.setTipoUsuario(usuarioMod.getTipoUsuario());
         return usuarioAct;

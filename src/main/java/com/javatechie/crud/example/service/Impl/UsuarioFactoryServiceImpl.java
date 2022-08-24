@@ -40,7 +40,7 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
     public Usuario actualizarUsuario(Integer id, Integer adminId, Usuario usuario) throws Exception {
         try {
             if (completeCamposUsuarios.verificarIgualdadEnBase(usuario, id))
-                usuario.setLogin( (completeCamposUsuarios.verificarUsername(usuario, id)) ?
+                usuario.setLogin((completeCamposUsuarios.verificarUsername(usuario, id)) ?
                          metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()):
                         usuario.getLogin());
             return userService.updateUser(id, usuario,adminId);
