@@ -183,13 +183,15 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
     @Override
     public Obra editarObra(Integer id, Obra entity) throws Exception {
         try {
-
+            if (verificarIgualdad(id, entity)) {
+                return update(id, entity);
+            } else {
                 if (!verificarCodigo(entity.getCodigoObra())) {
                     return update(id, entity);
                 } else {
                     throw new Exception("El codigo de obra ya existe!");
                 }
-
+            }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -209,7 +211,9 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
             throw new Exception(e.getMessage());
         }
     }
-
+    private boolean verificarIgualdad(Integer id, Obra entity){
+        return obraRepository.findById(id).get().getCodigoObra().equals(entity.getCodigoObra()) ? true : false;
+    }
     private boolean verificarCodigo(Integer codigo) {
         return obraRepository.findByCodigoObra(codigo) != null ? true : false;
     }
