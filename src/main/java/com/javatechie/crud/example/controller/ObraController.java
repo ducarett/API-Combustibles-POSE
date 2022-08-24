@@ -37,9 +37,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> createObra(@RequestBody Obra entity) {
+    public ResponseEntity<?> createObra(@RequestBody Obra entity, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.crearObra(completeCamposObras.obraCamposAlta(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.crearObra(completeCamposObras.obraCamposAlta(entity,adminId)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -242,9 +242,9 @@ public class ObraController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.update(id, completeCamposObras.obraCamposMod(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.editarObra(id, completeCamposObras.obraCamposMod(entity)));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ObraService extends BaseService<Obra, Integer> {
 
+    Obra editarObra(Integer id, Obra entity) throws Exception;
+
     Obra crearObra(Obra entity) throws Exception;
 
     boolean bajaObra(Integer id) throws Exception;

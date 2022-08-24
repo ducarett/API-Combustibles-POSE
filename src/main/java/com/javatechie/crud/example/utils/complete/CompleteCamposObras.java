@@ -33,13 +33,11 @@ public class CompleteCamposObras {
      * @throws Exception
      */
 
-    public Obra obraCamposAlta(Obra entity) throws Exception {
+    public Obra obraCamposAlta(Obra entity, Integer adminId) throws Exception {
         try {
             entity.setFechaAlta(LocalDate.now());
             entity.setHoraAlta(LocalDateTime.now());
-            Usuario usuarioAlta = Usuario.builder()
-                    .usuarioId(1).build();
-            entity.setUsuarioAlta(usuarioAlta);
+            entity.setUsuarioAlta(Usuario.builder().usuarioId(adminId).build());
             entity.setDescripcion(entity.getDescripcion().toUpperCase());
             entity.setNombreObra(entity.getNombreObra().toUpperCase());
             return entity;

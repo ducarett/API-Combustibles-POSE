@@ -171,8 +171,7 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
         try {
             if (!verificarCodigo(entity.getCodigoObra())) {
                 return save(entity);
-            }
-            else {
+            } else {
                 throw new Exception("El codigo de obra ya existe!");
             }
 
@@ -180,6 +179,22 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    public Obra editarObra(Integer id, Obra entity) throws Exception {
+        try {
+
+                if (!verificarCodigo(entity.getCodigoObra())) {
+                    return update(id, entity);
+                } else {
+                    throw new Exception("El codigo de obra ya existe!");
+                }
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
 
     /**
      * servicio lista obras activas.
