@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class EncriptacionImpl implements Encriptacion {
 
     public String encriptarClave(String password) {
-        return BCrypt.hashpw(password.toUpperCase(), BCrypt.gensalt());
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public boolean descencriptarClave(String passwordActual, String passwordEnBase) {

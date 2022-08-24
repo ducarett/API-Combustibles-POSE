@@ -59,7 +59,7 @@ public class UsuarioFactoryServiceImpl implements UsuarioFactoryService {
     public Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception {
 
         usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
-        encriptacion.encriptarClave(usuario.getPassword());
+        usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword().toUpperCase()));
         completeCamposUsuarios.verificarDatosEnBase(usuario);
         completeCamposUsuarios.usuarioCamposAlta(usuario, adminId);
         return userService.save(usuario);
