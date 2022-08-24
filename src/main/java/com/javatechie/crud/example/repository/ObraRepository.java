@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface ObraRepository extends InterfaceBaseRepository<Obra, Integer> {
 
+    Obra findByCodigoObra(Integer codigo);
+
     @Override
     Optional<Obra> findById(Integer id);
 

@@ -59,9 +59,9 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
      * @throws Exception
      */
     @Override
-    public List<ObrasActivasDTO> listProvincia(String provincia,Pageable pageable) throws Exception {
+    public List<ObrasActivasDTO> listProvincia(String provincia, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByProvincia(provincia,pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByProvincia(provincia, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -75,9 +75,9 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
      * @throws Exception
      */
     @Override
-    public List<ObrasActivasDTO> listDescripcion(String descripcion,Pageable pageable) throws Exception {
+    public List<ObrasActivasDTO> listDescripcion(String descripcion, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByDescripcion(descripcion,pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByDescripcion(descripcion, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -91,9 +91,9 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
      * @throws Exception
      */
     @Override
-    public List<ObrasActivasDTO> listLocalidad(String localidad,Pageable pageable) throws Exception {
+    public List<ObrasActivasDTO> listLocalidad(String localidad, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByLocalidad(localidad,pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByLocalidad(localidad, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -107,10 +107,10 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
      * @throws Exception
      */
     @Override
-    public List<ObrasActivasDTO> listGerente(String nom_ape,Pageable pageable) throws Exception {
+    public List<ObrasActivasDTO> listGerente(String nom_ape, Pageable pageable) throws Exception {
         try {
             Usuario gerente = usuarioRepository.findUserIsGerente(nom_ape);
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByGerente(gerente.getUsuarioId(),pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByGerente(gerente.getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -125,10 +125,10 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
      */
 
     @Override
-    public List<ObrasActivasDTO> listJefe(String nom_ape,Pageable pageable) throws Exception {
+    public List<ObrasActivasDTO> listJefe(String nom_ape, Pageable pageable) throws Exception {
         try {
             Usuario jefe = usuarioRepository.findUserIsJefe(nom_ape);
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByJefe(jefe.getUsuarioId(),pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByJefe(jefe.getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -145,7 +145,7 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
     public List<ObrasActivasDTO> listAdministrativo(String nom_ape, Pageable pageable) throws Exception {
         try {
             Usuario admin = usuarioRepository.findUserIsAdmin(nom_ape); //revisar
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByAdministrativo(admin.getUsuarioId(),pageable));
+            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByAdministrativo(admin.getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -157,6 +157,28 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
     private Obra getObraForId(Integer id) {
         Optional<Obra> optional = interfaceBaseRepository.findById(id);
         return optional.get();
+    }
+
+    /**
+     * verifica si el codigo no existe en ninguna obra existente y lo persiste
+     *
+     * @param entity
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Obra crearObra(Obra entity) throws Exception {
+        try {
+            if (!verificarCodigo(entity.getCodigoObra())) {
+                return save(entity);
+            }
+            else {
+                throw new Exception("El codigo de obra ya existe!");
+            }
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     /**
@@ -172,6 +194,11 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
             throw new Exception(e.getMessage());
         }
     }
+
+    private boolean verificarCodigo(Integer codigo) {
+        return obraRepository.findByCodigoObra(codigo) != null ? true : false;
+    }
+
 
     /**
      * servicio lista obras dadas de baja.

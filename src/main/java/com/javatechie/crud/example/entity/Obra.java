@@ -61,4 +61,7 @@ public class Obra extends EntityBase implements Serializable {
     @JoinColumn(name = "USER_BAJA")
     private Usuario usuarioBaja;
 
+    @Column(name = "CODIGO_OBRA", unique = true)
+    private Integer codigoObra;
+
 }

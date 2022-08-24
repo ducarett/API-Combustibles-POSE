@@ -39,7 +39,7 @@ public class ObraController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> createObra(@RequestBody Obra entity) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.save(completeCamposObras.obraCamposAlta(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.crearObra(completeCamposObras.obraCamposAlta(entity)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

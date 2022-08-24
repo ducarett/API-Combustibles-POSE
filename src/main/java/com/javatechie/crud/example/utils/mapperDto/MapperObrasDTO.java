@@ -41,6 +41,7 @@ public class MapperObrasDTO {
         try {
             ObrasActivasDTO dto = ObrasActivasDTO.builder() // ver si anda
                     .obraId(entity.getObraId())
+                    .codigoObra(entity.getCodigoObra())
                     .descripcion(entity.getDescripcion().toUpperCase())
                     .Provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
                     .Localidad(entity.getLocalidad().getDescripcionLocalidad().toUpperCase())
