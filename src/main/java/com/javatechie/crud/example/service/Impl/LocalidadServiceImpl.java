@@ -3,8 +3,7 @@ package com.javatechie.crud.example.service.Impl;
 import com.javatechie.crud.example.dto.LocalidadConsultaDTO;
 import com.javatechie.crud.example.dto.LocalidadDTO;
 import com.javatechie.crud.example.service.interfaz.LocalidadService;
-import com.javatechie.crud.example.utils.complete.CompleteCamposLocalidad;
-import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposLocalidad;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.LocalidadRepository;
@@ -18,27 +17,26 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.crypto.AEADBadTagException;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.util.CollectionUtils;
 
 @Service
 public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> implements LocalidadService {
-
-    @Autowired
     private LocalidadRepository localidadRepository;
-
-    @Autowired
     private MapperLocalidadesDTO mapperLocalidadesDTO;
-
-    @Autowired
     private MetodosLocalidadUtils metodosLocalidadUtils;
-
-    @Autowired
     private CompleteCamposLocalidad completeCampos;
 
-    public LocalidadServiceImpl(InterfaceBaseRepository<Localidad, Integer> interfaceBaseRepository) {
+    public LocalidadServiceImpl(InterfaceBaseRepository<Localidad, Integer> interfaceBaseRepository,
+                                LocalidadRepository localidadRepository,
+                                MapperLocalidadesDTO mapperLocalidadesDTO,
+                                MetodosLocalidadUtils metodosLocalidadUtils,
+                                CompleteCamposLocalidad completeCampos ) {
         super(interfaceBaseRepository);
+        this.localidadRepository = localidadRepository;
+        this.mapperLocalidadesDTO = mapperLocalidadesDTO;
+        this.metodosLocalidadUtils = metodosLocalidadUtils;
+        this.completeCampos = completeCampos;
     }
 
     /**
@@ -74,7 +72,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
         try {
             if (interfaceBaseRepository.existsById(id)) {
                 Localidad localidadInactive = getById(id);
-                completeCampos.localidadCamposBaja(localidadInactive);
+               // completeCampos.localidadCamposBaja(localidadInactive);
                 interfaceBaseRepository.save(localidadInactive);
                 return true;
             } else {

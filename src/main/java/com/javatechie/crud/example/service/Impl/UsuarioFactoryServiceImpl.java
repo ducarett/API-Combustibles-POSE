@@ -4,7 +4,7 @@ import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
-import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import org.springframework.stereotype.Service;

@@ -13,15 +13,15 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
 
     UserDTO buscarPorLogin(String login) throws Exception;
 
-    List<UserDTO> listarPorNombre(String nombre,Pageable pageable) throws Exception;
+    List<UserDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception;
 
-    List<UserDTO> listarPorApellido(String apellido,Pageable pageable) throws Exception;
+    List<UserDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception;
 
-    List<UserDTO> listarPorCargo(String cargo,Pageable pageable) throws Exception;
+    List<UserDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception;
 
     UserDTO buscarPorLegajo(Integer legajo) throws Exception;
 
-    boolean bajaUsuario(Integer id) throws Exception;
+    boolean bajaUsuario(Integer id, Integer adminId) throws Exception;
 
     Page<Usuario> listarActivos(Pageable pageable) throws Exception;
 

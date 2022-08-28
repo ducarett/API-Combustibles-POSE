@@ -2,8 +2,7 @@ package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.dto.LocalidadConsultaDTO;
 import com.javatechie.crud.example.dto.LocalidadDTO;
-import com.javatechie.crud.example.utils.complete.CompleteCamposLocalidad;
-import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposLocalidad;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.service.Impl.LocalidadServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
@@ -57,10 +56,11 @@ public class LocalidadController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> createLocalidad(@RequestBody Localidad entity) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.save(completeCampos.localidadCamposAlta(entity)));
+            //return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.save(completeCampos.alta(entity)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
+        return null;
     }
 
     /**
@@ -128,10 +128,11 @@ public class LocalidadController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> updateLocalidad(@PathVariable int id, @RequestBody Localidad entity) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.update(id, completeCampos.localidadCamposMod(entity)));
+           // return ResponseEntity.status(HttpStatus.OK).body(localidadServiceImpl.update(id, completeCampos.localidadCamposMod(entity)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
         }
+        return null;
     }
 
     /**

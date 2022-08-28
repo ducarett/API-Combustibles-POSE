@@ -1,7 +1,7 @@
 package com.javatechie.crud.example.service.Impl;
 
 import com.javatechie.crud.example.service.interfaz.ObraService;
-import com.javatechie.crud.example.utils.complete.CompleteCamposObras;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposObras;
 import com.javatechie.crud.example.dto.ObrasActivasDTO;
 import com.javatechie.crud.example.entity.Obra;
 import com.javatechie.crud.example.entity.Usuario;

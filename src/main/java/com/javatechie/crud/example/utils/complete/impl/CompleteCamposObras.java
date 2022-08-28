@@ -1,4 +1,4 @@
-package com.javatechie.crud.example.utils.complete;
+package com.javatechie.crud.example.utils.complete.impl;
 
 import com.javatechie.crud.example.entity.Obra;
 import com.javatechie.crud.example.entity.Usuario;

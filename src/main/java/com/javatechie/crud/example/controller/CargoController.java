@@ -15,8 +15,12 @@ import javax.annotation.security.RolesAllowed;
 @RequestMapping("/cargos")
 @RestController
 public class CargoController {
-    @Autowired
+
     private CargoServiceImpl cargoServiceImpl;
+
+    public CargoController(CargoServiceImpl cargoServiceImpl) {
+        this.cargoServiceImpl = cargoServiceImpl;
+    }
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("")

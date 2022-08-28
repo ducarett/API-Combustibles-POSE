@@ -2,6 +2,7 @@ package com.javatechie.crud.example.utils.mapperDto;
 
 import com.javatechie.crud.example.dto.MaquinistaActivoDTO;
 import com.javatechie.crud.example.dto.MaquinistaConsultaDTO;
+import com.javatechie.crud.example.dto.MaquinistaDTO;
 import com.javatechie.crud.example.entity.Maquinista;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -16,9 +17,13 @@ public class MapperMaquinistasDTO {
 
     ModelMapper modelMapper = new ModelMapper();
 
-    public List<MaquinistaConsultaDTO> mapperDtoConsultaMaquinistas(Page<Maquinista> entities) throws Exception {
+    public MaquinistaDTO mapper(Maquinista maquinista){
+        return modelMapper.map(maquinista, MaquinistaDTO.class);
+    }
+
+    public List<MaquinistaDTO> mapperDtoConsultaMaquinistas(Page<Maquinista> entities) throws Exception {
         try {
-            List<MaquinistaConsultaDTO> entitiesDto = new ArrayList<>();
+            List<MaquinistaDTO> entitiesDto = new ArrayList<>();
             entities.stream().forEach(entity -> {
                 try {
                     entitiesDto.add(mapperActivoinactivo(entity));
@@ -32,19 +37,19 @@ public class MapperMaquinistasDTO {
         }
     }
 
-    public List<MaquinistaActivoDTO> mapperDtoMaquinistaActivo(Page<Maquinista> entities) throws Exception {
+    public List<MaquinistaDTO> mapperDtoMaquinistaActivo(Page<Maquinista> entities) throws Exception {
         try {
-            List<MaquinistaActivoDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, MaquinistaActivoDTO.class)));
+            List<MaquinistaDTO> entitiesDto = new ArrayList<>();
+            entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, MaquinistaDTO.class)));
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    private MaquinistaConsultaDTO mapperActivoinactivo(Maquinista entity) throws Exception {
+    private MaquinistaDTO mapperActivoinactivo(Maquinista entity) throws Exception {
         try {
-            MaquinistaConsultaDTO dto = MaquinistaConsultaDTO.builder()
+            MaquinistaDTO dto = MaquinistaDTO.builder()
                     .id(entity.getMaquinistaId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())

@@ -1,19 +1,16 @@
 package com.javatechie.crud.example.service.Impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
-import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -137,10 +134,10 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public boolean bajaUsuario(Integer id) throws Exception {
+    public boolean bajaUsuario(Integer id,Integer adminId) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(getById(id)));
+                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(getById(id),adminId));
                 return true;
             } else {
                 throw new Exception();

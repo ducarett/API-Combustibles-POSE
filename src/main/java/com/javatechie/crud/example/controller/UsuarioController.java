@@ -1,7 +1,7 @@
 package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.service.interfaz.UsuarioFactoryService;
-import com.javatechie.crud.example.utils.complete.CompleteCamposUsuarios;
+import com.javatechie.crud.example.utils.complete.impl.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -86,9 +84,9 @@ public class UsuarioController {
      */
     @DeleteMapping("/inactive/{id}")
     @RolesAllowed(Constant.ROL_ADMINISTRADOR)
-    public ResponseEntity<?> bajaUsuario(@PathVariable int id) {
+    public ResponseEntity<?> bajaUsuario(@PathVariable int id,@RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id,adminId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
         }

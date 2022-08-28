@@ -1,4 +1,4 @@
-package com.javatechie.crud.example.utils.complete;
+package com.javatechie.crud.example.utils.complete.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import com.javatechie.crud.example.entity.*;
@@ -42,15 +42,11 @@ public class CompleteCamposUsuarios {
         }
     }
 
-    public Usuario usuarioCamposBaja(Usuario entity) throws Exception {
+    public Usuario usuarioCamposBaja(Usuario entity, Integer adminId) throws Exception {
         try {
             entity.setFechaBaja(LocalDate.now());
             entity.setHoraBaja(LocalDateTime.now());
-            Usuario usuarioBaja = Usuario.builder()
-                    .usuarioId(1)
-                    .apellido("Schwarz".toUpperCase())
-                    .nombre("sDavid".toUpperCase()).build();
-            entity.setUsuarioBaja(usuarioBaja.getUsuarioId());
+            entity.setUsuarioBaja(adminId);
             return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -64,7 +60,7 @@ public class CompleteCamposUsuarios {
         usuarioAct.setLegajo(usuarioMod.getLegajo());
         usuarioAct.setCelular(usuarioMod.getCelular());
         usuarioAct.setCargo(usuarioMod.getCargo());
-        usuarioAct.setLogin(!StringUtils.isBlank(usuarioMod.getLogin()) ? usuarioMod.getLogin():usuarioAct.getLogin());
+        usuarioAct.setLogin(!StringUtils.isBlank(usuarioMod.getLogin()) ? usuarioMod.getLogin() : usuarioAct.getLogin());
         usuarioAct.setFechaMod(LocalDate.now());
         usuarioAct.setHoraMod(LocalDateTime.now());
         if (!StringUtils.isBlank(usuarioMod.getPassword())) {
@@ -77,7 +73,7 @@ public class CompleteCamposUsuarios {
 
 
     public boolean comprobarMail(String mail) {
-        return !usuarioRepository.findByMail(mail).isEmpty() ? true : false;
+        return usuarioRepository.findByMail(mail) != null;
     }
 
     public boolean comprobarLegajo(Integer legajo) {
@@ -123,7 +119,7 @@ public class CompleteCamposUsuarios {
                     throw new Exception("Este mail ya existe!");
                 }
             }
-            if(!StringUtils.isBlank(usuario.getPassword())) {
+            if (!StringUtils.isBlank(usuario.getPassword())) {
                 usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword()));
             }
             return true;

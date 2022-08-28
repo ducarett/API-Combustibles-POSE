@@ -1,41 +1,46 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.utils.complete.CompleteCamposMaquinistas;
-import com.javatechie.crud.example.dto.MaquinistaConsultaDTO;
+import com.javatechie.crud.example.service.Impl.MaquinistaProcessServiceImpl;
 import com.javatechie.crud.example.entity.Maquinista;
-import com.javatechie.crud.example.service.Impl.MaquinistaServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
-import com.javatechie.crud.example.utils.mapperDto.MapperMaquinistasDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.javatechie.crud.example.utils.processDto.impl.MaquinistaProcessDtoServiceImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.List;
 
 @RequestMapping("/maquinista")
 @RestController
 public class MaquinistaController {
-    @Autowired
-    private MaquinistaServiceImpl maquinistaServiceImpl;
-    @Autowired
-    private CompleteCamposMaquinistas completeCampos;
-    @Autowired
-    private MapperMaquinistasDTO mapperMaquinistasDTO;
 
+    private MaquinistaProcessServiceImpl maquinistaProcessService;
+
+    private MaquinistaProcessDtoServiceImpl maquinistaProcessDtoService;
+
+    public MaquinistaController(MaquinistaProcessServiceImpl maquinistaProcessService,
+                                MaquinistaProcessDtoServiceImpl maquinistaProcessDtoService) {
+        this.maquinistaProcessService = maquinistaProcessService;
+        this.maquinistaProcessDtoService = maquinistaProcessDtoService;
+    }
+
+
+    /**
+     * crea un maquinista verificando que el legajo no se encuentre em la base de datos.
+     *
+     * @param entity
+     * @param adminId
+     * @return
+     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> crearMaquinista(@RequestBody Maquinista entity) {
+    public ResponseEntity<?> crearMaquinista(@RequestBody Maquinista entity, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.save(completeCampos.maquinistaCamposAlta(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessService.crear(entity, adminId));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -50,14 +55,13 @@ public class MaquinistaController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> modificarMaquinista(@PathVariable int id, @RequestBody Maquinista entity) {
+    public ResponseEntity<?> modificarMaquinista(@PathVariable int id, @RequestBody Maquinista entity, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.update(id, completeCampos.maquinistaCamposMod(entity)));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessService.actualizar(id, entity, adminId));
         } catch (
                 Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     /**
@@ -69,11 +73,11 @@ public class MaquinistaController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> bajaMaquinista(@PathVariable int id) {
+    public ResponseEntity<?> bajaMaquinista(@PathVariable int id, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(maquinistaServiceImpl.bajaMaquinista(id));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(maquinistaProcessService.baja(id, adminId));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -88,9 +92,9 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinista(@RequestParam Integer id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.getById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessService.buscarPorId(id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -99,10 +103,9 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUsuariosActivos(Pageable pageable) {
         try {
-            Page<Maquinista> maquinistas = maquinistaServiceImpl.listActivos(pageable);
-            return ResponseEntity.status(HttpStatus.OK).body(mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistas));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.listarActivos(pageable));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -111,9 +114,9 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorNombre(nombre.toUpperCase()));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorNombre(nombre.toUpperCase()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -122,9 +125,9 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorApellido(apellido.toUpperCase()));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorApellido(apellido.toUpperCase()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -133,20 +136,20 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaServiceImpl.buscarPorLegajo(id));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorLegajo(id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/getAll")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<MaquinistaConsultaDTO> getAllMaquinistas(Pageable pageable) throws Exception {
+    public ResponseEntity<?> getAllMaquinistas(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaServiceImpl.findAll(pageable));
+            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.listarTodos(pageable));
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
