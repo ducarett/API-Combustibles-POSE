@@ -27,7 +27,7 @@ public class MaquinistaProcessDtoServiceImpl implements ProcessDtoService<Maquin
     public List<MaquinistaDTO> listarActivos(Pageable pageable) throws Exception {
         try {
             Page<Maquinista> maquinistas = maquinistaService.listActivos(pageable);
-            if (CollectionUtils.isEmpty((Collection<?>) maquinistas)) {
+            if (maquinistas.isEmpty()) {
                 throw new Exception("No se encontro ningun maquinista activo");
             }
             return mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistas);
