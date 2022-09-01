@@ -31,11 +31,7 @@ public class CompleteCamposLocalidad implements CompletarCampos<Localidad,Intege
         try {
             entity.setFechaBaja(LocalDate.now());
             entity.setHoraBaja(LocalDateTime.now());
-            Usuario usuarioBaja = Usuario.builder()
-                    .usuarioId(1)
-                    .apellido("Schwarz")
-                    .nombre("sDavid").build();
-            entity.setUsuarioBaja(usuarioBaja);
+            entity.setUsuarioBaja(Usuario.builder().usuarioId(bajaId).build());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -46,9 +42,7 @@ public class CompleteCamposLocalidad implements CompletarCampos<Localidad,Intege
         try {
             entity.setFechaMod(LocalDate.now());
             entity.setHoraMod(LocalDateTime.now());
-            Usuario usuarioMod = Usuario.builder()
-                    .usuarioId(1).build();
-            entity.setUsuarioMod(usuarioMod);
+            entity.setUsuarioMod(Usuario.builder().usuarioId(modId).build());
             entity.setDescripcionLocalidad(entity.getDescripcionLocalidad().toUpperCase());
             return entity;
         } catch (Exception e) {

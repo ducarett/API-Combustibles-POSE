@@ -3,7 +3,7 @@ package com.javatechie.crud.example.controller;
 import com.javatechie.crud.example.service.Impl.MaquinistaProcessServiceImpl;
 import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.utils.constantes.Constant;
-import com.javatechie.crud.example.utils.processDto.impl.MaquinistaProcessDtoServiceImpl;
+import com.javatechie.crud.example.utils.processDto.impl.MaquinistaProcessListServiceImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,10 @@ public class MaquinistaController {
 
     private MaquinistaProcessServiceImpl maquinistaProcessService;
 
-    private MaquinistaProcessDtoServiceImpl maquinistaProcessDtoService;
+    private MaquinistaProcessListServiceImpl maquinistaProcessDtoService;
 
     public MaquinistaController(MaquinistaProcessServiceImpl maquinistaProcessService,
-                                MaquinistaProcessDtoServiceImpl maquinistaProcessDtoService) {
+                                MaquinistaProcessListServiceImpl maquinistaProcessDtoService) {
         this.maquinistaProcessService = maquinistaProcessService;
         this.maquinistaProcessDtoService = maquinistaProcessDtoService;
     }
@@ -114,7 +114,7 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorNombre(nombre.toUpperCase()));
+            return null;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -125,7 +125,7 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorApellido(apellido.toUpperCase()));
+            return null;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -136,7 +136,7 @@ public class MaquinistaController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(maquinistaProcessDtoService.buscarPorLegajo(id));
+            return null;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

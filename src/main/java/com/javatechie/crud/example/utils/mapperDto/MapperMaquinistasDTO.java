@@ -1,7 +1,5 @@
 package com.javatechie.crud.example.utils.mapperDto;
 
-import com.javatechie.crud.example.dto.MaquinistaActivoDTO;
-import com.javatechie.crud.example.dto.MaquinistaConsultaDTO;
 import com.javatechie.crud.example.dto.MaquinistaDTO;
 import com.javatechie.crud.example.entity.Maquinista;
 import org.modelmapper.ModelMapper;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MapperMaquinistasDTO {

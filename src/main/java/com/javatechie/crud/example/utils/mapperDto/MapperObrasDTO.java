@@ -1,6 +1,6 @@
 package com.javatechie.crud.example.utils.mapperDto;
 
-import com.javatechie.crud.example.dto.ObrasActivasDTO;
+import com.javatechie.crud.example.dto.ObraDTO;
 import com.javatechie.crud.example.entity.Obra;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ public class MapperObrasDTO {
      * @return
      * @throws Exception
      */
-    public List<ObrasActivasDTO> mapperDtoObrasActivas(Page<Obra> entities) throws Exception {
+    public List<ObraDTO> mapperDtoObras(Page<Obra> entities) throws Exception {
         try {
-            List<ObrasActivasDTO> entitiesDto = new ArrayList<>();
+            List<ObraDTO> entitiesDto = new ArrayList<>();
             for (Obra auxObras : entities) {
-                entitiesDto.add(setDtoObrasActivas(auxObras));
+                entitiesDto.add(setDtoObras(auxObras));
             }
             return entitiesDto;
         } catch (Exception e) {
@@ -37,9 +37,9 @@ public class MapperObrasDTO {
      * @return
      * @throws Exception
      */
-    public ObrasActivasDTO setDtoObrasActivas(Obra entity) throws Exception {
+    public ObraDTO setDtoObras(Obra entity) throws Exception {
         try {
-            ObrasActivasDTO dto = ObrasActivasDTO.builder() // ver si anda
+            ObraDTO dto = ObraDTO.builder() // ver si anda
                     .obraId(entity.getObraId())
                     .codigoObra(entity.getCodigoObra())
                     .descripcion(entity.getDescripcion().toUpperCase())

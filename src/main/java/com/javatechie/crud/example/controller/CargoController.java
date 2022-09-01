@@ -27,9 +27,7 @@ public class CargoController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> getAllCargos() throws Exception {
         try {
-
             return ResponseEntity.status(HttpStatus.OK).body(cargoServiceImpl.listCargos());
-
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

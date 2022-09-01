@@ -4,6 +4,7 @@ import com.javatechie.crud.example.dto.LocalidadDTO;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.entity.Usuario;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class MetodosLocalidadUtils {
      * @return
      * @throws Exception
      */
-    public List<LocalidadDTO> ordenarProvicnciasAlfabeticamente(List<Localidad> entities) throws Exception {
+    public Page<LocalidadDTO> ordenarProvicnciasAlfabeticamente(Page<Localidad> entities) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
 
         String[] provincias = new String[]{"BUENOS AIRES", "CIUDAD AUTONOMA DE BUENOS AIRES", "CATAMARCA", "CHACO", "CHUBUT", "CORDOBA", "CORRIENTES", "ENTRE RIOS", "FORMOSA", "JUJUY", "LA PAMPA",
@@ -39,7 +40,12 @@ public class MetodosLocalidadUtils {
                 listProvincias.add(localidadAlfabeticamente(prov));
             }
         }
-        return listProvincias.stream().flatMap(List::stream).map(e -> modelMapper.map(e, LocalidadDTO.class)).collect(Collectors.toList());
+        Page<LocalidadDTO> page = (Page<LocalidadDTO>) listProvincias.stream()
+                .flatMap(List::stream)
+                .map(e -> modelMapper.map(e, LocalidadDTO.class))
+                .collect(Collectors.toList());
+        if (page.isEmpty()) throw new Exception("Error al ordenar localidades");
+        return page;
         //return listProvincias.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
@@ -50,7 +56,7 @@ public class MetodosLocalidadUtils {
      * @return
      */
     public List<Localidad> localidadAlfabeticamente(List<Localidad> entities) {
-        return  entities.stream()
+        return entities.stream()
                 .sorted(Comparator.comparing(e -> e.getDescripcionLocalidad()))
                 .peek(e -> e.setDescripcionLocalidad(e.getDescripcionLocalidad().toUpperCase()))
                 .collect(Collectors.toList());

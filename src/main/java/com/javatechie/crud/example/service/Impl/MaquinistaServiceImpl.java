@@ -1,13 +1,10 @@
 package com.javatechie.crud.example.service.Impl;
 
-import com.javatechie.crud.example.dto.MaquinistaDTO;
 import com.javatechie.crud.example.service.interfaz.MaquinistaService;
 import com.javatechie.crud.example.utils.complete.impl.CompletarCamposMaquinista;
-import com.javatechie.crud.example.dto.MaquinistaActivoDTO;
 import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.MaquinistaRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,8 +50,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
 
     public Maquinista crearMaquinista(Maquinista maquinista, Integer adminId) throws Exception {
         try {
-            completeCampos.alta(maquinista, adminId);
-            return save(maquinista);
+            return save(completeCampos.alta(maquinista, adminId));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -80,69 +76,67 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
         }
     }
 
-    /**
-     * servicio lista maquinistas activos.
-     *
-     * @return
-     * @throws Exception
-     */
     @Override
     public Page<Maquinista> listActivos(Pageable pageable) throws Exception {
         try {
-            return maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
+            Page<Maquinista> maquinistas = maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
+            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
+            return maquinistas;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio retorna un maquinista por ID.
-     *
-     * @param legajo
-     * @return
-     * @throws Exception
-     */
+    @Override
+    public Page<Maquinista> listInactivos(Pageable pageable) throws Exception {
+        try {
+            Page<Maquinista> maquinistas = maquinistaRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable);
+            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
+            return maquinistas;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<Maquinista> listAllMaquinistas(Pageable pageable) throws Exception {
+        try {
+            Page<Maquinista> maquinistas = maquinistaRepository.findAll(pageable);
+            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
+            return maquinistas;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
     @Override
     public Maquinista getByLegajo(Integer legajo) throws Exception {
         try {
             Maquinista maquinista = maquinistaRepository.findByLegajo(legajo);
-            if (Objects.isNull(maquinista)) throw new Exception("No hubo resultado");
+            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
             return maquinista;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio retorna un maquinista por nombre.
-     *
-     * @param nombre
-     * @return
-     * @throws Exception
-     */
+
     @Override
     public Maquinista getByNombre(String nombre) throws Exception {
         try {
             Maquinista maquinista = maquinistaRepository.findByNombre(nombre);
-            if (Objects.isNull(maquinista)) throw new Exception("No hubo resultado");
+            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
             return maquinista;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio retorna un mquinista por apellido.
-     *
-     * @param apellido
-     * @return
-     * @throws Exception
-     */
     @Override
     public Maquinista getByApellido(String apellido) throws Exception {
         try {
             Maquinista maquinista = maquinistaRepository.findByApellido(apellido);
-            if (Objects.isNull(maquinista)) throw new Exception("No hubo resultado");
+            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
             return maquinista;
         } catch (Exception e) {
             throw new Exception(e.getMessage());

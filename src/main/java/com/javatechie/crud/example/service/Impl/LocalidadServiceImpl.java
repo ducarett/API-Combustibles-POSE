@@ -1,127 +1,101 @@
 package com.javatechie.crud.example.service.Impl;
 
-import com.javatechie.crud.example.dto.LocalidadConsultaDTO;
-import com.javatechie.crud.example.dto.LocalidadDTO;
 import com.javatechie.crud.example.service.interfaz.LocalidadService;
 import com.javatechie.crud.example.utils.complete.impl.CompleteCamposLocalidad;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.LocalidadRepository;
-import com.javatechie.crud.example.utils.mapperDto.MapperLocalidadesDTO;
-import com.javatechie.crud.example.utils.metodo.MetodosLocalidadUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
+import java.util.*;
 
 @Service
 public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> implements LocalidadService {
+    private final static String NO_EXIST = "No se encontro ninguna localidad!";
+    private final static String ERROR = "Error al ejecutar un proceso sobre la entidad localidad";
     private LocalidadRepository localidadRepository;
-    private MapperLocalidadesDTO mapperLocalidadesDTO;
-    private MetodosLocalidadUtils metodosLocalidadUtils;
-    private CompleteCamposLocalidad completeCampos;
+    private CompleteCamposLocalidad completeCamposLocalidad;
 
     public LocalidadServiceImpl(InterfaceBaseRepository<Localidad, Integer> interfaceBaseRepository,
                                 LocalidadRepository localidadRepository,
-                                MapperLocalidadesDTO mapperLocalidadesDTO,
-                                MetodosLocalidadUtils metodosLocalidadUtils,
-                                CompleteCamposLocalidad completeCampos ) {
+                                CompleteCamposLocalidad completeCamposLocalidad) {
         super(interfaceBaseRepository);
         this.localidadRepository = localidadRepository;
-        this.mapperLocalidadesDTO = mapperLocalidadesDTO;
-        this.metodosLocalidadUtils = metodosLocalidadUtils;
-        this.completeCampos = completeCampos;
+        this.completeCamposLocalidad = completeCamposLocalidad;
     }
 
-    /**
-     * Lista las loclaidades alfabeticamente.
-     *
-     * @param provinciaId
-     * @return
-     * @throws Exception
-     */
-
-    @Override 
-    public List<LocalidadDTO> listLocalidades(Integer provinciaId) throws Exception {
-        ModelMapper model = new ModelMapper();
-        return Optional
-                .ofNullable(localidadRepository.findAllForProvincia(provinciaId).stream()
-                        .filter(localidad -> localidad.getFechaBaja() == null)
-                        .sorted(Comparator.comparing(localidad -> localidad.getDescripcionLocalidad()))
-                        .map(localidad -> model.map(localidad,LocalidadDTO.class))
-                        .collect(Collectors.toList()))
-                .orElseThrow(Exception::new);
-
-    }
-
-    /**
-     * servicio baja de localidad.
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public boolean bajaLocalidad(Integer id) throws Exception {
+    public Localidad crearLocalidad(Localidad localidad, Integer adminId) throws Exception {
         try {
-            if (interfaceBaseRepository.existsById(id)) {
-                Localidad localidadInactive = getById(id);
-               // completeCampos.localidadCamposBaja(localidadInactive);
-                interfaceBaseRepository.save(localidadInactive);
-                return true;
-            } else {
-                throw new Exception();
-            }
+            return save(completeCamposLocalidad.alta(localidad, adminId));
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(ERROR);
         }
     }
 
-    /**
-     * busqueda por ID.
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
+    public Localidad editarLocalidad(Integer id, Localidad localidad, Integer adminId) throws Exception {
+        try {
+            return update(id, completeCamposLocalidad.modificar(localidad, adminId));
+        } catch (Exception e) {
+            throw new Exception(ERROR);
+        }
+    }
+
     @Override
-    public String buscarPorId(Integer id) throws Exception {
+    public boolean bajaLocalidad(Integer id, Integer adminId) throws Exception {
         try {
             Localidad localidad = getById(id);
-            return localidad.getDescripcionLocalidad().toUpperCase();
+            if (Objects.isNull(localidad)) throw new Exception(NO_EXIST);
+            completeCamposLocalidad.baja(localidad, adminId);
+            update(id, localidad);
+            return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public List<LocalidadDTO> ordenarLocalidades() throws Exception {
+    public Localidad getPorId(Integer id) throws Exception {
         try {
-            return metodosLocalidadUtils.ordenarProvicnciasAlfabeticamente(localidadRepository.findByFechaBajaIsNullAndHoraBajaIsNull());
+            Localidad localidad = getById(id);
+            if (Objects.isNull(localidad)) throw new Exception(NO_EXIST);
+            return localidad;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public List<LocalidadConsultaDTO> ordenarLocalidadesActivosInactivos() throws Exception {
+    @Override
+    public Page<Localidad> listarLocalidadesPorProvId(Integer provinciaId, Pageable pageable) throws Exception {
         try {
-            List<LocalidadConsultaDTO> entities = new ArrayList<>();
-            localidadRepository.findAll().forEach(localidad -> {
-                try {
-                    entities.add(mapperLocalidadesDTO.mapperActivoinactivo(localidad));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            return entities;
+            return localidadRepository.findAllForProvincia(provinciaId, pageable);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception(NO_EXIST);
+        }
+    }
+
+    public Page<Localidad> listAllObras(Pageable pageable) throws Exception {
+        try {
+            return localidadRepository.findAll(pageable);
+        } catch (Exception e) {
+            throw new Exception(NO_EXIST);
+        }
+    }
+
+    public Page<Localidad> listInactivos(Pageable pageable) throws Exception {
+        try {
+            return localidadRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable);
+        } catch (Exception e) {
+            throw new Exception(NO_EXIST);
+        }
+    }
+
+    public Page<Localidad> listActivos(Pageable pageable) throws Exception {
+        try {
+            return localidadRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
+        } catch (Exception e) {
+            throw new Exception(NO_EXIST);
         }
     }
 }

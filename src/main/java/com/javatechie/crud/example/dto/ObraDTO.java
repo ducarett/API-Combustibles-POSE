@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ObrasActivasDTO {
+public class ObraDTO {
 
     @JsonProperty("obraId")
     private Integer obraId;

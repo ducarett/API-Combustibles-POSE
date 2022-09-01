@@ -1,12 +1,10 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.utils.complete.impl.CompleteCamposObras;
-import com.javatechie.crud.example.dto.ObrasActivasDTO;
+import com.javatechie.crud.example.service.Impl.ObraProcessServiceImpl;
+import com.javatechie.crud.example.dto.ObraDTO;
 import com.javatechie.crud.example.entity.Obra;
-import com.javatechie.crud.example.service.Impl.ObraServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
-import com.javatechie.crud.example.utils.mapperDto.MapperObrasDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.javatechie.crud.example.utils.processDto.impl.ObraProcessDtoServiceImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +17,15 @@ import java.util.List;
 @RequestMapping("/obras")
 public class ObraController {
 
-    @Autowired
-    private ObraServiceImpl obraServiceImpl;
+    private ObraProcessServiceImpl obraProcessServiceImpl;
 
-    @Autowired
-    private MapperObrasDTO mapperObrasDTO;
+    private ObraProcessDtoServiceImpl obraProcessDtoService;
 
-    @Autowired
-    private CompleteCamposObras completeCamposObras;
+    public ObraController(ObraProcessServiceImpl obraProcessServiceImpl,
+                          ObraProcessDtoServiceImpl obraProcessDtoService) {
+        this.obraProcessServiceImpl = obraProcessServiceImpl;
+        this.obraProcessDtoService = obraProcessDtoService;
+    }
 
     /**
      * Crea Obra nueva, hardcodea los campos dateAdd y hourAdd con la fecha y hora actual del sistema, encripta la password.
@@ -39,11 +38,47 @@ public class ObraController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
     public ResponseEntity<?> createObra(@RequestBody Obra entity, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.crearObra(completeCamposObras.obraCamposAlta(entity,adminId)));
+            return ResponseEntity.status(HttpStatus.OK).body(obraProcessServiceImpl.crear(entity, adminId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * modifica una obra.
+     *
+     * @param id
+     * @param entity
+     * @return
+     */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
+    @PutMapping("/update/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
+    public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity, @RequestHeader Integer adminId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(obraProcessServiceImpl.actualizar(id, entity, adminId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    /**
+     * da de baja una obra.
+     *
+     * @param id
+     * @return
+     */
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
+    @DeleteMapping("/inactive/{id}")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
+    public ResponseEntity<?> bajaObra(@PathVariable int id, @RequestHeader Integer adminId) {
+        try {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(obraProcessServiceImpl.baja(id, adminId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
     /**
      * retorna una lista de obras activas.
@@ -55,11 +90,11 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/activas")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> getAllObrasActivas(Pageable pageable) throws Exception {
+    public ResponseEntity<?> getAllObrasActivas(Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraServiceImpl.listActivas(pageable));
+            return ResponseEntity.status(HttpStatus.OK).body(obraProcessDtoService.listarActivos(pageable));
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -73,11 +108,11 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/inactivas")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> getAllObrasInactivas(Pageable pageable) throws Exception {
+    public ResponseEntity<?> getAllObrasInactivas(Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraServiceImpl.listInactivas(pageable));
+            return ResponseEntity.status(HttpStatus.OK).body(obraProcessDtoService.listarActivos(pageable));
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -91,11 +126,11 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public Obra searchForObraID(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<?> searchForObraID(@PathVariable Integer id) throws Exception {
         try {
-            return obraServiceImpl.getById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(obraProcessServiceImpl.buscarPorId(id));
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -110,9 +145,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/descripcion")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForDescription(@RequestParam String descripcion, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForDescription(@RequestParam String descripcion, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listDescripcion(descripcion.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -129,9 +164,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/provincia")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForProvince(@RequestParam String provincia, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForProvince(@RequestParam String provincia, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listProvincia(provincia.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -148,9 +183,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/localidad")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForLocalidad(@RequestParam String localidad, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForLocalidad(@RequestParam String localidad, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listLocalidad(localidad.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -167,9 +202,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/gerente")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForGerente(@RequestParam String gerente, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForGerente(@RequestParam String gerente, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listGerente(gerente.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -186,9 +221,9 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/jefe")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForJefe(@RequestParam String jefe, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForJefe(@RequestParam String jefe, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listJefe(jefe.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -205,46 +240,12 @@ public class ObraController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/search/administrativo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<ObrasActivasDTO> searchForAdministrativo(@RequestParam String administrativo, Pageable pageable) throws Exception {
+    public List<ObraDTO> searchForAdministrativo(@RequestParam String administrativo, Pageable pageable) throws Exception {
         try {
-            return obraServiceImpl.listAdministrativo(administrativo.toUpperCase(), pageable);
+            return null;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * da de baja una obra.
-     *
-     * @param id
-     * @return
-     */
-    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
-    @DeleteMapping("/inactive/{id}")
-    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> bajaObra(@PathVariable int id) {
-        try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(obraServiceImpl.bajaObra(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error: por favor intentelo mas tarde.\"}");
-        }
-    }
-
-    /**
-     * modifica una obra.
-     *
-     * @param id
-     * @param entity
-     * @return
-     */
-    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
-    @PutMapping("/update/{id}")
-    @RolesAllowed({Constant.ROL_ADMINISTRADOR})
-    public ResponseEntity<?> updateObra(@PathVariable int id, @RequestBody Obra entity,@RequestHeader Integer adminId) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(obraServiceImpl.editarObra(id, completeCamposObras.obraCamposMod(entity,adminId)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 }
