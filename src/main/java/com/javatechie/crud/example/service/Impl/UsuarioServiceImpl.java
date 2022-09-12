@@ -43,7 +43,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     @Override
     public List<UserDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByNombre(nombre, pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByNombre(nombre, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -58,7 +58,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     @Override
     public List<UserDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByApellido(apellido, pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByApellido(apellido, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -73,7 +73,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     @Override
     public List<UserDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception {
         try {
-            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findByCargo(cargo, pageable));
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByCargo(cargo, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -134,10 +134,10 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public boolean bajaUsuario(Integer id,Integer adminId) throws Exception {
+    public boolean bajaUsuario(Integer id, Integer adminId) throws Exception {
         try {
             if (interfaceBaseRepository.existsById(id)) {
-                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(getById(id),adminId));
+                interfaceBaseRepository.save(completeCamposUsuarios.usuarioCamposBaja(getById(id), adminId));
                 return true;
             } else {
                 throw new Exception();
@@ -229,7 +229,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
             if (usuarioRepository.existsById(id)) {
                 log.info("el usuario {} con id {}, existe!", usuario.getApellido().concat(" " + usuario.getNombre()), id);
                 Usuario usuarioactualizado = getById(id);
-                return save(completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario,adminId));
+                return save(completeCamposUsuarios.setDatosModificados(usuarioactualizado, usuario, adminId));
             } else {
                 throw new Exception("El usuario no existe");
             }

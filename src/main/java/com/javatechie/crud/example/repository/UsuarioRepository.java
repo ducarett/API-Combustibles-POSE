@@ -19,6 +19,7 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
 
     @Query(value = "SELECT * FROM usuarios u INNER JOIN cargos C ON U.ID_CARGO = C.ID_CARGOS WHERE C.DESC_CARGO = 'GERENTE' AND U.NOMBRE = :nomApell OR U.APELLIDO = :nomApell", nativeQuery = true)
     Usuario findUserIsGerente(@Param("nomApell") String dato);
+
     @Query(value = "SELECT * FROM usuarios u INNER JOIN cargos C ON U.ID_CARGO = C.ID_CARGOS WHERE C.DESC_CARGO = 'JEFE' AND U.NOMBRE = :nomApell OR U.APELLIDO = :nomApell", nativeQuery = true)
     Usuario findUserIsJefe(@Param("nomApell") String dato);
 
@@ -27,12 +28,14 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
 
     List<Usuario> findByMail(String login);
 
-    Page<Usuario> findByNombre(String nombre,Pageable pageable);
+    @Query(value = "Select u from Usuario u WHERE u.nombre LIKE %:filtro%")
+    Page<Usuario> findListByNombre(@Param("filtro") String filtro, Pageable pageable);
 
-    Page<Usuario> findByApellido(String apellido,Pageable pageable);
+    @Query(value = "Select u from Usuario u WHERE u.apellido LIKE %:filtro%")
+    Page<Usuario> findListByApellido(@Param("filtro") String filtro, Pageable pageable);
 
-    @Query(value = "SELECT distinct u FROM Usuario u INNER JOIN u.cargo c WHERE c.descripcionCargo = :cargo")
-    Page<Usuario> findByCargo(@Param("cargo") String cargos, Pageable pageable);
+    @Query(value = "SELECT distinct u FROM Usuario u INNER JOIN u.cargo c WHERE c.descripcionCargo LIKE %:filtro%")
+    Page<Usuario> findListByCargo(@Param("filtro") String filtro, Pageable pageable);
 
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 20 AND u.fechaBaja is null ")
     Page<Usuario> findListGerente(Pageable pageable);
@@ -43,7 +46,7 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 30 AND u.fechaBaja is null ")
     Page<Usuario> findListAdministrativo(Pageable pageable);
 
-    Usuario findByLegajo(Integer nombre);
+    Usuario findByLegajo(Integer legajo);
 
     Page<Usuario> findByFechaBajaIsNullAndHoraBajaIsNull(Pageable pageable);
 

@@ -1,13 +1,8 @@
 package com.javatechie.crud.example.utils.processDto.impl;
 
 import com.javatechie.crud.example.dto.LocalidadDTO;
-import com.javatechie.crud.example.dto.ObraDTO;
-import com.javatechie.crud.example.entity.Localidad;
-import com.javatechie.crud.example.entity.Obra;
 import com.javatechie.crud.example.service.interfaz.LocalidadService;
-import com.javatechie.crud.example.service.interfaz.ObraService;
 import com.javatechie.crud.example.utils.mapperDto.MapperLocalidadesDTO;
-import com.javatechie.crud.example.utils.mapperDto.MapperObrasDTO;
 import com.javatechie.crud.example.utils.metodo.MetodosLocalidadUtils;
 import com.javatechie.crud.example.utils.processDto.interfaze.ProcessDtoService;
 import org.springframework.data.domain.Page;

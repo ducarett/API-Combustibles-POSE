@@ -26,6 +26,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
         this.completeCamposLocalidad = completeCamposLocalidad;
     }
 
+
     public Localidad crearLocalidad(Localidad localidad, Integer adminId) throws Exception {
         try {
             return save(completeCamposLocalidad.alta(localidad, adminId));
