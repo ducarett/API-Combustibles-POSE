@@ -84,11 +84,11 @@ public class MapperUsuariosDTO {
     }
 
     @Transactional
-    public List<UserDTO> mapperDtoUsuarioActivo(Page<Usuario> entities) throws Exception {
+    public List<UsuarioDTO> mapperDtoUsuarioActivo(Page<Usuario> entities) throws Exception {
         try {
-            List<UserDTO> entitiesDto = new ArrayList<>();
+            List<UsuarioDTO> entitiesDto = new ArrayList<>();
             for (Usuario auxUsuario : entities) {
-                entitiesDto.add(modelMapper.map(auxUsuario, UserDTO.class));
+                entitiesDto.add(modelMapper.map(auxUsuario, UsuarioDTO.class));
             }
             return entitiesDto;
         } catch (Exception e) {
@@ -103,9 +103,9 @@ public class MapperUsuariosDTO {
      * @return
      * @throws Exception
      */
-    public UserDTO buscarPorLogin(Usuario user) throws Exception {
+    public UsuarioDTO buscarPorLogin(Usuario user) throws Exception {
         try {
-            return modelMapper.map(user, UserDTO.class);
+            return modelMapper.map(user, UsuarioDTO.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

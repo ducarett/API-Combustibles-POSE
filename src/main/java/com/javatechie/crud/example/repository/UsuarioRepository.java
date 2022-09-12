@@ -46,6 +46,11 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
     @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.cargoId = 30 AND u.fechaBaja is null ")
     Page<Usuario> findListAdministrativo(Pageable pageable);
 
+    @Query(value = "SELECT u FROM Usuario u  WHERE u.cargo.descripcionCargo Like %:cargo% or u.apellido LIKE %:apellido% OR u.nombre LIKE %:nombre% OR u.login LIKE %:userName% OR u.legajo = :legajo")
+    Page<Usuario> findListBuscados(Pageable page, @Param("nombre") String nombre,
+                                   @Param("apellido") String apellido, @Param("userName") String userName,
+                                   @Param("legajo") Integer legajo, @Param("cargo") String cargo);
+
     Usuario findByLegajo(Integer legajo);
 
     Page<Usuario> findByFechaBajaIsNullAndHoraBajaIsNull(Pageable pageable);

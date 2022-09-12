@@ -1,17 +1,12 @@
 package com.javatechie.crud.example.utils.metodo;
 
-import com.javatechie.crud.example.dto.UserDTO;
+import com.javatechie.crud.example.dto.UsuarioDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.UsuarioRepository;
-import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
 import com.javatechie.crud.example.service.interfaz.Encriptacion;
-import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -58,11 +53,11 @@ public class MetodosUsuariosUtils {
         }
     }
 
-    public List<UserDTO> listarAlfabeticamenteNomApell(Page<Usuario> entities) throws Exception {
+    public List<UsuarioDTO> listarAlfabeticamenteNomApell(Page<Usuario> entities) throws Exception {
         return Optional
                 .ofNullable(entities.stream()
                 .sorted(Comparator.comparing(user -> user.getApellido().concat(" " + user.getNombre())))
-                .map(user -> new ModelMapper().map(user,UserDTO.class))
+                .map(user -> new ModelMapper().map(user, UsuarioDTO.class))
                 .collect(Collectors.toList())).orElseThrow(Exception::new);
 
     }

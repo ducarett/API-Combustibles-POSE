@@ -1,6 +1,6 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.service.Impl.ObraProcessServiceImpl;
+import com.javatechie.crud.example.service.Impl.process.ObraProcessServiceImpl;
 import com.javatechie.crud.example.dto.ObraDTO;
 import com.javatechie.crud.example.entity.Obra;
 import com.javatechie.crud.example.utils.constantes.Constant;

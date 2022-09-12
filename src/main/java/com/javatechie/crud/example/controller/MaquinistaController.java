@@ -1,6 +1,6 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.service.Impl.MaquinistaProcessServiceImpl;
+import com.javatechie.crud.example.service.Impl.process.MaquinistaProcessServiceImpl;
 import com.javatechie.crud.example.entity.Maquinista;
 import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.processDto.impl.MaquinistaProcessListServiceImpl;

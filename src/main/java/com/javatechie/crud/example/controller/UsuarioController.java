@@ -6,9 +6,10 @@ import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import com.javatechie.crud.example.dto.UserConsultaDTO;
-import com.javatechie.crud.example.dto.UserDTO;
+import com.javatechie.crud.example.dto.UsuarioDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import com.javatechie.crud.example.utils.processDto.impl.UsuarioProcessListServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,30 +25,27 @@ import java.util.List;
 @RequestMapping("/user")
 public class UsuarioController {
     private static final String FAILED_PROCESS = "Error al ejecutar el proceso, ";
+    public static final String SEARCH_NO_FOUND = "No se encontraron resultados que coincidan con los filtros de busqueda!";
     private final UsuarioServiceImpl userServiceImpl;
     private final MapperUsuariosDTO mapperUsuariosDTO;
     private final CompleteCamposUsuarios completeCamposUsuarios;
     private final MetodosUsuariosUtils metodosUsuariosUtils;
 
+    private final UsuarioProcessListServiceImpl usuarioProcessListService;
     private final UsuarioFactoryService usuarioFactoryService;
 
     public UsuarioController(UsuarioServiceImpl userServiceImpl, MapperUsuariosDTO mapperUsuariosDTO,
                              CompleteCamposUsuarios completeCamposUsuarios, MetodosUsuariosUtils metodosUsuariosUtils,
-                             UsuarioFactoryService usuarioFactoryService) {
+                             UsuarioProcessListServiceImpl usuarioProcessListService, UsuarioFactoryService usuarioFactoryService) {
         this.userServiceImpl = userServiceImpl;
         this.mapperUsuariosDTO = mapperUsuariosDTO;
         this.completeCamposUsuarios = completeCamposUsuarios;
         this.metodosUsuariosUtils = metodosUsuariosUtils;
+        this.usuarioProcessListService = usuarioProcessListService;
         this.usuarioFactoryService = usuarioFactoryService;
     }
 
 
-    /**
-     * Crea User nuevo, hardcodea los campos dateAdd y hourAdd con la fecha y hora actual del sistema, encripta la password.
-     *
-     * @param usuario
-     * @return
-     */
     @PostMapping("/create")
     @RolesAllowed(Constant.ROL_ADMINISTRADOR)
     public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario, @RequestHeader Integer adminId) {
@@ -58,14 +56,7 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * Modifica la entidad User, antes de eso comprueba que los campos celular mail o legajo no esten repetidos.
-     * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
-     *
-     * @param id
-     * @param usuario
-     * @return
-     */
+
     @PutMapping("/update/{id}")
     @RolesAllowed(Constant.ROL_ADMINISTRADOR)
     public ResponseEntity<?> UpdateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario, @RequestHeader Integer adminId) {
@@ -76,28 +67,18 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * Desactiva el User.
-     *
-     * @param id
-     * @return
-     */
+
     @DeleteMapping("/inactive/{id}")
     @RolesAllowed(Constant.ROL_ADMINISTRADOR)
-    public ResponseEntity<?> bajaUsuario(@PathVariable int id,@RequestHeader Integer adminId) {
+    public ResponseEntity<?> bajaUsuario(@PathVariable int id, @RequestHeader Integer adminId) {
         try {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id,adminId));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userServiceImpl.bajaUsuario(id, adminId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PROCESS);
         }
     }
 
-    /**
-     * lista los usuarios activos.
-     *
-     * @param pageable
-     * @return
-     */
+
     @GetMapping("/active")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUserActivos(Pageable pageable) {
@@ -109,12 +90,7 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * Lista los usuarios inactivos.
-     *
-     * @param pageable
-     * @return
-     */
+
     @GetMapping("/inactive")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUerInactivos(Pageable pageable) {
@@ -125,13 +101,7 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * retorna una lista de dtos con el campo activo en si o no.
-     *
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/getAll")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public List<UserConsultaDTO> getAllUsuarios(Pageable pageable) throws Exception {
@@ -142,13 +112,7 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * Retorna un User segun el ID.
-     *
-     * @param id
-     * @return
-     */
-    // @Secured("ADMINISTRATIVO")
+
     @GetMapping("/")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> getUsuario(@RequestParam Integer id) {
@@ -159,17 +123,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * busca usuarios por nombre.
-     *
-     * @param name
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/search/nombre")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> searchForNombre(@RequestParam String name, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> searchForNombre(@RequestParam String name, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorNombre(name.toUpperCase(), pageable);
         } catch (Exception e) {
@@ -177,17 +134,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * busca usuarios por apellido.
-     *
-     * @param lastName
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/search/apellido")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> searchForApellido(@RequestParam String lastName, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> searchForApellido(@RequestParam String lastName, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorApellido(lastName.toUpperCase(), pageable);
         } catch (Exception e) {
@@ -195,17 +145,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * busca usuarios por cargo.
-     *
-     * @param position
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/search/cargo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listarPorCargo(position.toUpperCase(), pageable);
         } catch (Exception e) {
@@ -213,16 +156,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * busca usuarios por username(login).
-     *
-     * @param userName
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/search/userName")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public UserDTO searchForLogin(@RequestParam String userName) throws Exception {
+    public UsuarioDTO searchForLogin(@RequestParam String userName) throws Exception {
         try {
             return userServiceImpl.buscarPorLogin(userName.toUpperCase());
         } catch (Exception e) {
@@ -230,16 +167,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * busca usuarios por legajo.
-     *
-     * @param legajo
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/search/legajo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public UserDTO searchForlegajo(@RequestParam Integer legajo) throws Exception {
+    public UsuarioDTO searchForlegajo(@RequestParam Integer legajo) throws Exception {
         try {
             return userServiceImpl.buscarPorLegajo(legajo);
         } catch (Exception e) {
@@ -247,16 +178,7 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * cambia la clave de usuario y lo persiste y lo retorna.
-     *
-     * @param pass
-     * @param newPass
-     * @param newPassConf
-     * @param id
-     * @return
-     * @throws Exception
-     */
+
     @PutMapping("/updatePass")
     @RolesAllowed(Constant.ROL_ADMINISTRADOR)
     public Usuario updatePassword(@RequestParam String pass, @RequestParam String newPassConf, @RequestParam Integer id, @RequestParam String newPass) throws Exception {
@@ -267,16 +189,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * retorna una lista de gerentes con nombre y apellido ordenados alfabeticamente.
-     *
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/gerentes")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> listGerentes(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listGerentes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaGerentes(pageable);
         } catch (Exception e) {
@@ -284,16 +200,10 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * retorna una lista de jefes con nombre y apellido ordenados alfabeticamente.
-     *
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/jefes")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> listJefes(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listJefes(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaJefes(pageable);
         } catch (Exception e) {
@@ -301,20 +211,24 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * retorna una lista de administrativos rodenados alfabeticamente.
-     *
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
+
     @GetMapping("/administrativos")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public List<UserDTO> listAdministrativos(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listAdministrativos(Pageable pageable) throws Exception {
         try {
             return userServiceImpl.listaAdministrativos(pageable);
         } catch (Exception e) {
             throw new Exception(FAILED_PROCESS + e.getMessage());
+        }
+    }
+
+    @GetMapping("/search")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
+    public ResponseEntity<?> busquedaUniversal(Pageable pageable,@RequestBody Usuario usuario) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioProcessListService.listarBusqueda(pageable, usuario));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SEARCH_NO_FOUND);
         }
     }
 }

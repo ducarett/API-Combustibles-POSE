@@ -1,4 +1,4 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.process;
 
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.entity.Obra;

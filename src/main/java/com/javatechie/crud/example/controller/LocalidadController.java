@@ -1,22 +1,15 @@
 package com.javatechie.crud.example.controller;
 
-import com.javatechie.crud.example.dto.LocalidadConsultaDTO;
-import com.javatechie.crud.example.dto.LocalidadDTO;
-import com.javatechie.crud.example.service.Impl.LocalidadProcessServiceImpl;
-import com.javatechie.crud.example.utils.complete.impl.CompleteCamposLocalidad;
+import com.javatechie.crud.example.service.Impl.process.LocalidadProcessServiceImpl;
 import com.javatechie.crud.example.entity.Localidad;
-import com.javatechie.crud.example.service.Impl.LocalidadServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
-import com.javatechie.crud.example.utils.mapperDto.MapperLocalidadesDTO;
 import com.javatechie.crud.example.utils.processDto.impl.LocalidadProcesListServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.List;
 
 @RestController
 @RequestMapping("/localidad")

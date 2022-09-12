@@ -6,7 +6,7 @@ import com.javatechie.crud.example.service.interfaz.UsuarioService;
 import com.javatechie.crud.example.utils.complete.impl.CompleteCamposUsuarios;
 import com.javatechie.crud.example.utils.metodo.MetodosUsuariosUtils;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
-import com.javatechie.crud.example.dto.UserDTO;
+import com.javatechie.crud.example.dto.UsuarioDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception {
         try {
             return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByNombre(nombre, pageable));
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception {
         try {
             return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByApellido(apellido, pageable));
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public List<UserDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception {
         try {
             return mapperUsuariosDTO.mapperDtoUsuarioActivo(usuarioRepository.findListByCargo(cargo, pageable));
         } catch (Exception e) {
@@ -86,9 +86,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @return
      */
     @Override
-    public UserDTO buscarPorLegajo(Integer legajo) throws Exception {
+    public UsuarioDTO buscarPorLegajo(Integer legajo) throws Exception {
         try {
-            return new ModelMapper().map(usuarioRepository.findByLegajo(legajo), UserDTO.class);
+            return new ModelMapper().map(usuarioRepository.findByLegajo(legajo), UsuarioDTO.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -118,7 +118,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public UserDTO buscarPorLogin(String user) throws Exception {
+    public UsuarioDTO buscarPorLogin(String user) throws Exception {
         try {
             return mapperUsuariosDTO.buscarPorLogin(usuarioRepository.findByLogin(user));
         } catch (Exception e) {
@@ -184,7 +184,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<UserDTO> listaGerentes(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listaGerentes(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListGerente(pageable));
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<UserDTO> listaJefes(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listaJefes(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListJefes(pageable));
         } catch (Exception e) {
@@ -214,7 +214,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
      * @throws Exception
      */
     @Override
-    public List<UserDTO> listaAdministrativos(Pageable pageable) throws Exception {
+    public List<UsuarioDTO> listaAdministrativos(Pageable pageable) throws Exception {
         try {
             return metodosUsuariosUtils.listarAlfabeticamenteNomApell(usuarioRepository.findListAdministrativo(pageable));
         } catch (Exception e) {
@@ -233,6 +233,18 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
             } else {
                 throw new Exception("El usuario no existe");
             }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<UsuarioDTO> listarBusquedaUniversal(Pageable page, Usuario usuario) throws Exception {
+        try {
+            return mapperUsuariosDTO.mapperDtoUsuarioActivo(
+                    usuarioRepository.findListBuscados(page,usuario.getNombre(),
+                            usuario.getApellido(),usuario.getLogin(),usuario.getLegajo(),
+                            usuario.getCargo().getDescripcionCargo()));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
