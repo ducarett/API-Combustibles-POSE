@@ -1,9 +1,8 @@
 package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.entity.Provincia;
-import com.javatechie.crud.example.service.Impl.ProvinciaServiceImpl;
+import com.javatechie.crud.example.service.Impl.implement.ProvinciaServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +18,11 @@ import javax.annotation.security.RolesAllowed;
 @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
 public class ProvinciaController {
 
-    @Autowired
     private ProvinciaServiceImpl provinciaService;
+
+    public ProvinciaController(ProvinciaServiceImpl provinciaService) {
+        this.provinciaService = provinciaService;
+    }
 
     @GetMapping("")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})

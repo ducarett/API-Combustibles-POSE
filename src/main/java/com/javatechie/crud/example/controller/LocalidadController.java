@@ -2,6 +2,7 @@ package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.service.Impl.process.LocalidadProcessServiceImpl;
 import com.javatechie.crud.example.entity.Localidad;
+import com.javatechie.crud.example.service.interfaz.Busqueda;
 import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.processDto.impl.LocalidadProcesListServiceImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,19 +17,15 @@ import javax.annotation.security.RolesAllowed;
 public class LocalidadController {
     private LocalidadProcessServiceImpl localidadProcessServiceImpl;
     private LocalidadProcesListServiceImpl localidadProcessListServiceImpl;
+    private Busqueda busqueda;
 
     public LocalidadController(LocalidadProcessServiceImpl localidadProcessServiceImpl,
-                               LocalidadProcesListServiceImpl localidadProcessListServiceImpl) {
+                               LocalidadProcesListServiceImpl localidadProcessListServiceImpl, Busqueda busqueda) {
         this.localidadProcessServiceImpl = localidadProcessServiceImpl;
         this.localidadProcessListServiceImpl = localidadProcessListServiceImpl;
+        this.busqueda = busqueda;
     }
 
-    /**
-     * crea una localidad
-     *
-     * @param entity
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -40,12 +37,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * baja de localidad
-     *
-     * @param id
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -57,13 +48,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * modifica una localidad.
-     *
-     * @param id
-     * @param entity
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -75,13 +59,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * devuelve una localidad por ID
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -93,14 +70,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * lista alfabeticamente todas las localidades relacionadas a una provincia
-     * por ID.
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/provincia/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -112,12 +81,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * lista las las localidades en de forma alfabetica segun provincias.
-     *
-     * @return
-     * @throws Exception
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/active")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -129,12 +92,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * lista las las localidades en de forma alfabetica segun provincias.
-     *
-     * @return
-     * @throws Exception
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/inactive")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -146,12 +103,6 @@ public class LocalidadController {
         }
     }
 
-    /**
-     * lista localidades con el campo activo.
-     *
-     * @return
-     * @throws Exception
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/all")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -161,6 +112,16 @@ public class LocalidadController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
 
+    @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
+    @GetMapping("search/nombre")
+    @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
+    public ResponseEntity<?> listLocalidadesNombre(Pageable pageable, @RequestParam String nombre) throws Exception {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarLocalidadPorNombre(pageable, nombre));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

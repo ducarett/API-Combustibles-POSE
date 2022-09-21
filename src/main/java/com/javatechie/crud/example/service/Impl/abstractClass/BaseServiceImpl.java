@@ -1,5 +1,6 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.abstractClass;
 
+import com.javatechie.crud.example.entity.Obra;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.service.interfaz.BaseService;
 import org.springframework.data.domain.Page;
@@ -8,22 +9,19 @@ import org.springframework.data.domain.Pageable;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class BaseServiceImpl<E, ID extends Serializable> implements BaseService<E, ID> {
 
+    private static final String NO_HUBO_RESULTADOS = "No hubo resultados";
+    private static final String NO_EXIST = "No existe este elemento!";
     protected InterfaceBaseRepository<E, ID> interfaceBaseRepository;
 
     public BaseServiceImpl(InterfaceBaseRepository<E, ID> interfaceBaseRepository) {
         this.interfaceBaseRepository = interfaceBaseRepository;
     }
 
-    /**
-     * metodo generico para obtener una lista cpmpleta de una entidad especifica.
-     *
-     * @return
-     * @throws Exception
-     */
     @Override
     @Transactional
     public List<E> findAll() throws Exception {
@@ -36,14 +34,6 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
         }
     }
 
-
-    /**
-     * metodo generico para obtener una lista paginada de una entidad especifica.
-     *
-     * @param pageable
-     * @return
-     * @throws Exception
-     */
     @Override
     @Transactional
     public Page<E> findAll(Pageable pageable) throws Exception {
@@ -56,13 +46,6 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
         }
     }
 
-    /**
-     * metodo generico para obtener una entidad por ID
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
     @Override
     @Transactional
     public E getById(ID id) throws Exception {
@@ -74,13 +57,6 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
         }
     }
 
-    /**
-     * metodo generico para crear(persistir) un entidad nueva.
-     *
-     * @param entity
-     * @return
-     * @throws Exception
-     */
     @Override
     @Transactional
     public E save(E entity) throws Exception {
@@ -92,14 +68,6 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
         }
     }
 
-    /**
-     * metodo generico para modificar una entidad.
-     *
-     * @param id
-     * @param entity
-     * @return
-     * @throws Exception
-     */
     @Override
     @Transactional
     public E update(ID id, E entity) throws Exception {
@@ -114,13 +82,7 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
         }
     }
 
-    /**
-     * metodo generico de borrado fisico no logico.
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
+
     @Override
     @Transactional
     public boolean inactive(ID id) throws Exception {
@@ -131,6 +93,26 @@ public abstract class BaseServiceImpl<E, ID extends Serializable> implements Bas
             } else {
                 throw new Exception();
             }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<E> listGeneric(Page<E> list) throws Exception {
+        try {
+            if (list.isEmpty()) throw new Exception(NO_HUBO_RESULTADOS);
+            return list;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public E getEntity(E entity) throws Exception {
+        try {
+            if (Objects.isNull(entity)) throw new Exception(NO_EXIST);
+            return entity;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

@@ -11,6 +11,7 @@ public interface BaseService<E, ID extends Serializable> {
     List<E> findAll() throws Exception;
 
     Page<E> findAll(Pageable pageable) throws Exception;
+
     E getById(ID id) throws Exception;
 
     E save(E entity) throws Exception;
@@ -18,5 +19,9 @@ public interface BaseService<E, ID extends Serializable> {
     E update(ID id, E entity) throws Exception;
 
     boolean inactive(ID id) throws Exception;
+
+    E getEntity(E entity) throws Exception;
+
+    Page<E> listGeneric(Page<E> entities) throws Exception;
 
 }

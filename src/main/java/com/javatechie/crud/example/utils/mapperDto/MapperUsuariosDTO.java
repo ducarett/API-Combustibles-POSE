@@ -13,43 +13,32 @@ import java.util.List;
 @Service
 public class MapperUsuariosDTO {
 
-    ModelMapper modelMapper = new ModelMapper();
-
-    /**
-     * setea todo un dto con los datos de usuarios inactivos.
-     *
-     * @param entities
-     * @return
-     * @throws Exception
-     */
-    public List<UserInactiveDTO> mapperDtoUsuarioInactivo(Page<Usuario> entities) throws Exception {
+    public static UserLoginDto mapperLoginDto(Usuario usuario) throws Exception {
         try {
-            List<UserInactiveDTO> entitiesDto = new ArrayList<>();
-            for (Usuario auxUsuario : entities) {
-                entitiesDto.add(modelMapper.map(auxUsuario, UserInactiveDTO.class));
-            }
-            return entitiesDto;
+            ModelMapper model = new ModelMapper();
+            return model.map(usuario, UserLoginDto.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * setea un dto determinando si es un usuario activo o inactivo.
-     *
-     * @param entity
-     * @return
-     * @throws Exception
-     */
-    private UserConsultaDTO mapperActivoinactivo(Usuario entity) throws Exception {
+    public static UsuarioDTO mapperDtoUsuario(Usuario usuario) throws Exception {
         try {
-            UserConsultaDTO dto = UserConsultaDTO.builder()
+            return mapper(usuario);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    private static UsuarioDTO mapper(Usuario entity) throws Exception {
+        try {
+            UsuarioDTO dto = UsuarioDTO.builder()
                     .id(entity.getUsuarioId())
                     .nombre(entity.getNombre())
                     .apellido(entity.getApellido())
                     .login(entity.getLogin())
                     .legajo(entity.getLegajo())
-                    .cargo(entity.getCargo().getDescripcionCargo())
+                    .descripcionCargo(entity.getCargo().getDescripcionCargo())
                     .build();
             if (entity.getFechaBaja() == null && entity.getHoraBaja() == null) {
                 dto.setActivo("si");
@@ -62,58 +51,13 @@ public class MapperUsuariosDTO {
         }
     }
 
-    /**
-     * mappea un dto con campo activo.
-     *
-     * @param entities
-     * @return
-     * @throws Exception
-     */
-
-    @Transactional
-    public List<UserConsultaDTO> mapperDtoConsultaUsuarios(Page<Usuario> entities) throws Exception {
-        try {
-            List<UserConsultaDTO> entitiesDto = new ArrayList<>();
-            for (Usuario auxUsuario : entities) {
-                entitiesDto.add(mapperActivoinactivo(auxUsuario));
-            }
-            return entitiesDto;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public List<UsuarioDTO> mapperDtoUsuarioActivo(Page<Usuario> entities) throws Exception {
+    public static List<UsuarioDTO> mapperDtoUsuarios(Page<Usuario> entities) throws Exception {
         try {
             List<UsuarioDTO> entitiesDto = new ArrayList<>();
             for (Usuario auxUsuario : entities) {
-                entitiesDto.add(modelMapper.map(auxUsuario, UsuarioDTO.class));
+                entitiesDto.add(mapper(auxUsuario));
             }
             return entitiesDto;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    /**
-     * retorna un DTO de usuario por login.
-     *
-     * @param user
-     * @return
-     * @throws Exception
-     */
-    public UsuarioDTO buscarPorLogin(Usuario user) throws Exception {
-        try {
-            return modelMapper.map(user, UsuarioDTO.class);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    public UserLoginDto mapperUserToUserDto(Usuario usuario) throws Exception {
-        try {
-            return modelMapper.map(usuario, UserLoginDto.class);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

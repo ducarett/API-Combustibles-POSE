@@ -1,11 +1,9 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
 import com.javatechie.crud.example.entity.Cargo;
-import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
-import com.javatechie.crud.example.repository.CargoRepository;
+import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.CargoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

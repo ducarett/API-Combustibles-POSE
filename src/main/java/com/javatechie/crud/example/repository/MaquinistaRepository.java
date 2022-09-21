@@ -21,8 +21,8 @@ public interface MaquinistaRepository extends InterfaceBaseRepository<Maquinista
 
     Maquinista findByLegajo(Integer legajo);
 
-    Maquinista findByApellido(String apellido);
+    Page<Maquinista> findByApellido(Pageable pageable, String apellido);
 
-    Maquinista findByNombre(String nombre);
+    Page<Maquinista> findByNombre(Pageable pageable, String nombre);
 
 }

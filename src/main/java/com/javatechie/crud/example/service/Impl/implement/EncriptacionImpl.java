@@ -1,4 +1,4 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
 
 import com.javatechie.crud.example.service.interfaz.Encriptacion;

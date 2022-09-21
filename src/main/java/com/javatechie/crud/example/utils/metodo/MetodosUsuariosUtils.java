@@ -62,14 +62,6 @@ public class MetodosUsuariosUtils {
 
     }
 
-    /**
-     * construye el UserName(login) con la primer letra del nombre y concatena el apellido.
-     *
-     * @param nombre
-     * @param apellido
-     * @return
-     * @throws Exception
-     */
     public String crearUserName(String nombre, String apellido) throws Exception {
         try {
             nombre = nombre.substring(0, 1);

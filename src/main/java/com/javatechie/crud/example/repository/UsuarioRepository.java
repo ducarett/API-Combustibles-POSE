@@ -1,6 +1,5 @@
 package com.javatechie.crud.example.repository;
 
-
 import com.javatechie.crud.example.entity.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,7 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
 
     Usuario findByLogin(String login);
 
-    List<Usuario> findByCelular(Long login);
+    Usuario findByCelular(Long login);
 
     @Query(value = "SELECT * FROM usuarios u INNER JOIN cargos C ON U.ID_CARGO = C.ID_CARGOS WHERE C.DESC_CARGO = 'GERENTE' AND U.NOMBRE = :nomApell OR U.APELLIDO = :nomApell", nativeQuery = true)
     Usuario findUserIsGerente(@Param("nomApell") String dato);
@@ -26,7 +25,7 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
     @Query(value = "SELECT * FROM usuarios u INNER JOIN cargos C ON U.ID_CARGO = C.ID_CARGOS WHERE C.DESC_CARGO = 'ADMINISTRATIVO' AND U.NOMBRE = :nomApell OR U.APELLIDO = :nomApell", nativeQuery = true)
     Usuario findUserIsAdmin(@Param("nomApell") String dato);
 
-    List<Usuario> findByMail(String login);
+    Usuario findByMail(String mail);
 
     @Query(value = "Select u from Usuario u WHERE u.nombre LIKE %:filtro%")
     Page<Usuario> findListByNombre(@Param("filtro") String filtro, Pageable pageable);

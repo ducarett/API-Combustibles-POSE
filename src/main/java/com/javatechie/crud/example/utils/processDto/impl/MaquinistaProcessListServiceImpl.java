@@ -26,7 +26,7 @@ public class MaquinistaProcessListServiceImpl implements ProcessDtoService<Maqui
     @Override
     public List<MaquinistaDTO> listarActivos(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistaService.listActivos(pageable));
+            return MapperMaquinistasDTO.mapperDtoMaquinistas(maquinistaService.listActivos(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -35,7 +35,7 @@ public class MaquinistaProcessListServiceImpl implements ProcessDtoService<Maqui
     @Override
     public List<MaquinistaDTO> listarInactivos(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoMaquinistaActivo(maquinistaService.listInactivos(pageable));
+            return MapperMaquinistasDTO.mapperDtoMaquinistas(maquinistaService.listInactivos(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -44,20 +44,9 @@ public class MaquinistaProcessListServiceImpl implements ProcessDtoService<Maqui
     @Override
     public List<MaquinistaDTO> listarTodos(Pageable pageable) throws Exception {
         try {
-            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(maquinistaService.listAllMaquinistas(pageable));
+            return MapperMaquinistasDTO.mapperDtoMaquinistas(maquinistaService.listAllMaquinistas(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
-
-    @Override
-    public List<MaquinistaDTO> listar(Page page) throws Exception {
-        try {
-            if (page.isEmpty()) throw new Exception(NO_EXIST);
-            return mapperMaquinistasDTO.mapperDtoConsultaMaquinistas(page);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
 }

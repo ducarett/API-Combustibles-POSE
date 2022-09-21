@@ -17,6 +17,8 @@ public interface LocalidadService extends BaseService<Localidad, Integer> {
 
     Page<Localidad> listarLocalidadesPorProvId(Integer provinciaId, Pageable pageable) throws Exception;
 
+    Page<Localidad> listarLocalidadesPorNombre(String nombre, Pageable pageable) throws Exception;
+
     Page<Localidad> listAllObras(Pageable pageable) throws Exception;
 
     Page<Localidad> listInactivos(Pageable pageable) throws Exception;

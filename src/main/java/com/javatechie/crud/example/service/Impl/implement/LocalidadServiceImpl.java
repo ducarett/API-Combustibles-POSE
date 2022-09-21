@@ -1,5 +1,6 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
+import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.LocalidadService;
 import com.javatechie.crud.example.utils.complete.impl.CompleteCamposLocalidad;
 import com.javatechie.crud.example.entity.Localidad;
@@ -39,7 +40,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
         try {
             return update(id, completeCamposLocalidad.modificar(localidad, adminId));
         } catch (Exception e) {
-            throw new Exception(ERROR);
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -59,9 +60,7 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     @Override
     public Localidad getPorId(Integer id) throws Exception {
         try {
-            Localidad localidad = getById(id);
-            if (Objects.isNull(localidad)) throw new Exception(NO_EXIST);
-            return localidad;
+            return getEntity(getById(id));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -70,33 +69,42 @@ public class LocalidadServiceImpl extends BaseServiceImpl<Localidad, Integer> im
     @Override
     public Page<Localidad> listarLocalidadesPorProvId(Integer provinciaId, Pageable pageable) throws Exception {
         try {
-            return localidadRepository.findAllForProvincia(provinciaId, pageable);
+            return listGeneric(localidadRepository.findAllForProvincia(provinciaId, pageable));
         } catch (Exception e) {
-            throw new Exception(NO_EXIST);
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<Localidad> listarLocalidadesPorNombre(String nombre, Pageable pageable) throws Exception {
+        try {
+            return listGeneric(localidadRepository.findListNombre(nombre, pageable));
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 
     public Page<Localidad> listAllObras(Pageable pageable) throws Exception {
         try {
-            return localidadRepository.findAll(pageable);
+            return listGeneric(localidadRepository.findAll(pageable));
         } catch (Exception e) {
-            throw new Exception(NO_EXIST);
+            throw new Exception(e.getMessage());
         }
     }
 
     public Page<Localidad> listInactivos(Pageable pageable) throws Exception {
         try {
-            return localidadRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable);
+            return listGeneric(localidadRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable));
         } catch (Exception e) {
-            throw new Exception(NO_EXIST);
+            throw new Exception(e.getMessage());
         }
     }
 
     public Page<Localidad> listActivos(Pageable pageable) throws Exception {
         try {
-            return localidadRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
+            return listGeneric(localidadRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable));
         } catch (Exception e) {
-            throw new Exception(NO_EXIST);
+            throw new Exception(e.getMessage());
         }
     }
 }

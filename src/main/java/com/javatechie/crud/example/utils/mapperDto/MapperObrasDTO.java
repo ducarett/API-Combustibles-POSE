@@ -11,14 +11,7 @@ import java.util.List;
 @Service
 public class MapperObrasDTO {
 
-    /**
-     * setea el dto de las obras activas.
-     *
-     * @param entities
-     * @return
-     * @throws Exception
-     */
-    public List<ObraDTO> mapperDtoObras(Page<Obra> entities) throws Exception {
+    public static List<ObraDTO> mapperDtoObras(Page<Obra> entities) throws Exception {
         try {
             List<ObraDTO> entitiesDto = new ArrayList<>();
             for (Obra auxObras : entities) {
@@ -30,16 +23,9 @@ public class MapperObrasDTO {
         }
     }
 
-    /**
-     * setea los campos del dto de obras activas.
-     *
-     * @param entity
-     * @return
-     * @throws Exception
-     */
-    public ObraDTO setDtoObras(Obra entity) throws Exception {
+    public static ObraDTO setDtoObras(Obra entity) throws Exception {
         try {
-            ObraDTO dto = ObraDTO.builder() // ver si anda
+            ObraDTO dto = ObraDTO.builder()
                     .obraId(entity.getObraId())
                     .codigoObra(entity.getCodigoObra())
                     .descripcion(entity.getDescripcion().toUpperCase())
@@ -54,13 +40,4 @@ public class MapperObrasDTO {
             throw new Exception(e.getMessage());
         }
     }
- /*int id = entity.getGerente().getUsuarioId();
-            Optional<Usuario> gerente = usuarioRepository.findById(id);
-            dto.setGerente(gerente.get().getApellido().concat(" " + gerente.get().getNombre()));
-            id = entity.getJefe().getUsuarioId();
-            Optional<Usuario> jefe = usuarioRepository.findById(id);
-            dto.setJefe(jefe.get().getApellido().concat(" " + jefe.get().getNombre()));
-            id = entity.getAdmin().getUsuarioId();
-            Optional<Usuario> administrativo = usuarioRepository.findById(id);
-            dto.setAdministrativo(administrativo.get().getApellido().concat(" " + administrativo.get().getNombre()));*/
 }

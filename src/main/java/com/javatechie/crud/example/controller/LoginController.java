@@ -2,7 +2,7 @@ package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.dto.UserLoginDto;
 import com.javatechie.crud.example.entity.Usuario;
-import com.javatechie.crud.example.service.Impl.UsuarioServiceImpl;
+import com.javatechie.crud.example.service.Impl.implement.UsuarioServiceImpl;
 import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.mapperDto.MapperUsuariosDTO;
 import io.jsonwebtoken.Jwts;
@@ -40,11 +40,12 @@ public class LoginController {
         Usuario usuario = userServiceImpl.getPorLogin(userName);
 
         if (usuario == null || !usuario.getLogin().equals(userName)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" usuario incorrecto.\"}");        }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" usuario incorrecto.\"}");
+        }
         if (!BCrypt.checkpw(pass, usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\" password incorrecto.\"}");
         }
-        UserLoginDto userLoginDto = mapperUsuariosDTO.mapperUserToUserDto(usuario);
+        UserLoginDto userLoginDto = mapperUsuariosDTO.mapperLoginDto(usuario);
         userLoginDto.setJwt(getJWTToken(user, usuario.getTipoUsuario().getDescripcion()));
         return ResponseEntity.status(HttpStatus.OK).body(userLoginDto);
     }

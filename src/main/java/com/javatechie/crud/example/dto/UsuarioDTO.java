@@ -16,7 +16,9 @@ import lombok.NoArgsConstructor;
         "nombre",
         "login",
         "legajo",
-        "cargo"
+        "cargo",
+        "activo"
+
 })
 @Builder
 @Data
@@ -42,5 +44,10 @@ public class UsuarioDTO {
 
  @JsonProperty("cargo")
  private String descripcionCargo;
+
+ @JsonProperty("activo")
+ private String activo;
+
+
 
 }

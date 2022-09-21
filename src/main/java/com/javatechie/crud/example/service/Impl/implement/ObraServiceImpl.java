@@ -1,10 +1,10 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
+import com.javatechie.crud.example.entity.Usuario;
+import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.ObraService;
 import com.javatechie.crud.example.utils.complete.impl.CompleteCamposObras;
-import com.javatechie.crud.example.dto.ObraDTO;
 import com.javatechie.crud.example.entity.Obra;
-import com.javatechie.crud.example.entity.Usuario;
 import com.javatechie.crud.example.repository.ObraRepository;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.UsuarioRepository;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -66,9 +65,7 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
     @Override
     public Obra getEntity(Integer id) throws Exception {
         try {
-            Obra obra = getById(id);
-            if (Objects.isNull(obra)) throw new Exception(NO_EXIST);
-            return obra;
+            return getEntity(getById(id));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -76,122 +73,79 @@ public class ObraServiceImpl extends BaseServiceImpl<Obra, Integer> implements O
 
     public Page<Obra> listAllObras(Pageable pageable) throws Exception {
         try {
-            return obraRepository.findAll(pageable);
+            return listGeneric(obraRepository.findAll(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
     }
 
     public Page<Obra> listActivos(Pageable pageable) throws Exception {
         try {
-            return obraRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
+            return listGeneric(obraRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
-
 
     public Page<Obra> listInactivos(Pageable pageable) throws Exception {
         try {
-            return obraRepository.findByFechaBajaIsNotNullAndUsuarioBajaIsNotNull(pageable);
+            return listGeneric(obraRepository.findByFechaBajaIsNotNullAndUsuarioBajaIsNotNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-   /* @Override
-    public List<ObraDTO> listProvincia(String provincia, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listProvincia(String provincia, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByProvincia(provincia, pageable));
+            return listGeneric(obraRepository.findByFechaBajaIsNotNullAndUsuarioBajaIsNotNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio lista obras segun la descripcion.
-     *
-     * @param descripcion
-     * @return
-     * @throws Exception
-     */
-  /*  @Override
-    public List<ObraDTO> listDescripcion(String descripcion, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listDescripcion(String descripcion, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByDescripcion(descripcion, pageable));
+            return listGeneric(obraRepository.findByFechaBajaIsNotNullAndUsuarioBajaIsNotNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio lista obras segun la localidad.
-     *
-     * @param localidad
-     * @return
-     * @throws Exception
-     */
-  /*  @Override
-    public List<ObraDTO> listLocalidad(String localidad, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listLocalidad(String localidad, Pageable pageable) throws Exception {
         try {
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByLocalidad(localidad, pageable));
+            return listGeneric(obraRepository.findByLocalidad(localidad, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio lista obras segun el gerente.
-     *
-     * @param nom_ape
-     * @return
-     * @throws Exception
-     */
-/*    @Override
-    public List<ObraDTO> listGerente(String nom_ape, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listGerente(String nom_ape, Pageable pageable) throws Exception {
         try {
-            Usuario gerente = usuarioRepository.findUserIsGerente(nom_ape);
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByGerente(gerente.getUsuarioId(), pageable));
+            return listGeneric(obraRepository.findByGerente(usuarioRepository.findUserIsGerente(nom_ape).getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servicio lista obras segun el jefe.
-     *
-     * @param nom_ape
-     * @return
-     * @throws Exception
-     */
-
-/*    @Override
-    public List<ObraDTO> listJefe(String nom_ape, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listJefe(String nom_ape, Pageable pageable) throws Exception {
         try {
-            Usuario jefe = usuarioRepository.findUserIsJefe(nom_ape);
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByJefe(jefe.getUsuarioId(), pageable));
+            return listGeneric(obraRepository.findByJefe(usuarioRepository.findUserIsJefe(nom_ape).getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    /**
-     * servico lista obras segun el administrativo.
-     *
-     * @param nom_ape
-     * @return
-     * @throws Exception
-     */
-/*    @Override
-    public List<ObraDTO> listAdministrativo(String nom_ape, Pageable pageable) throws Exception {
+    @Override
+    public Page<Obra> listAdministrativo(String nom_ape, Pageable pageable) throws Exception {
         try {
-            Usuario admin = usuarioRepository.findUserIsAdmin(nom_ape);
-            return mapperObrasDTO.mapperDtoObrasActivas(obraRepository.findByAdministrativo(admin.getUsuarioId(), pageable));
+            return listGeneric(obraRepository.findByAdministrativo(usuarioRepository.findUserIsAdmin(nom_ape).getUsuarioId(), pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
-*/
-
 }

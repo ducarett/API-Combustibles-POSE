@@ -9,17 +9,21 @@ import java.util.List;
 
 public interface UsuarioService extends BaseService<Usuario, Integer> {
 
+    Page<Usuario> listAllUsuarios(Pageable pageable) throws Exception;
+
+    Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception;
+
     Usuario getPorLogin(String login) throws Exception;
 
-    UsuarioDTO buscarPorLogin(String login) throws Exception;
+    Usuario getUsuario(Integer id) throws Exception;
 
-    List<UsuarioDTO> listarPorNombre(String nombre, Pageable pageable) throws Exception;
+    Page<Usuario> listarPorNombre(String nombre, Pageable pageable) throws Exception;
 
-    List<UsuarioDTO> listarPorApellido(String apellido, Pageable pageable) throws Exception;
+    Page<Usuario> listarPorApellido(String apellido, Pageable pageable) throws Exception;
 
-    List<UsuarioDTO> listarPorCargo(String cargo, Pageable pageable) throws Exception;
+    Page<Usuario> listarPorCargo(String cargo, Pageable pageable) throws Exception;
 
-    UsuarioDTO buscarPorLegajo(Integer legajo) throws Exception;
+    Usuario buscarPorLegajo(Integer legajo) throws Exception;
 
     boolean bajaUsuario(Integer id, Integer adminId) throws Exception;
 
@@ -27,13 +31,13 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
 
     Page<Usuario> listarInactivos(Pageable pageable) throws Exception;
 
-    List<UsuarioDTO> listaGerentes(Pageable pageable) throws Exception;
+    Page<Usuario> listaGerentes(Pageable pageable) throws Exception;
 
-    List<UsuarioDTO> listaJefes(Pageable pageable) throws Exception;
+    Page<Usuario> listaJefes(Pageable pageable) throws Exception;
 
-    List<UsuarioDTO> listaAdministrativos(Pageable pageable) throws Exception;
+    Page<Usuario> listaAdministrativos(Pageable pageable) throws Exception;
 
     Usuario updateUser(Integer id, Usuario usuario, Integer adminId) throws Exception;
 
-    List<UsuarioDTO> listarBusquedaUniversal(Pageable page, Usuario usuario) throws Exception;
+    Page<Usuario> listarBusquedaUniversal(Pageable page, Usuario usuario) throws Exception;
 }

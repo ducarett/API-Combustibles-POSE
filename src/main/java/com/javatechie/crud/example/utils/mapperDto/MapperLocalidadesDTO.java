@@ -16,20 +16,25 @@ import java.util.stream.Collectors;
 @Service
 public class MapperLocalidadesDTO {
 
-    ModelMapper modelMapper = new ModelMapper();
-
-    public List<LocalidadDTO> mapperDtoLocalidad(Page<Localidad> entities) throws Exception {
+    public static List<LocalidadDTO> mapperDtoLocalidades(Page<Localidad> entities) throws Exception {
         try {
             List<LocalidadDTO> entitiesDto = new ArrayList<>();
-            entities.forEach(entity -> entitiesDto.add(modelMapper.map(entity, LocalidadDTO.class)));
+            entities.forEach(entity -> {
+                try {
+                    entitiesDto.add(mapper(entity));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             return entitiesDto;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
-    public LocalidadConsultaDTO mapperDTO(Localidad entity) throws Exception {
+
+    public static LocalidadDTO mapper(Localidad entity) throws Exception {
         try {
-            LocalidadConsultaDTO dto = LocalidadConsultaDTO.builder()
+            LocalidadDTO dto = LocalidadDTO.builder()
                     .provincia(entity.getProvincia().getDescriptionProvincia().toUpperCase())
                     .localidad(entity.getDescripcionLocalidad().toUpperCase())
                     .build();
@@ -43,16 +48,5 @@ public class MapperLocalidadesDTO {
             throw new Exception(e.getMessage());
         }
     }
-
-   /* ModelMapper model = new ModelMapper();
-        return Optional
-                .ofNullable(localidadRepository.findAllForProvincia(provinciaId, pageable).stream()
-                        .filter(localidad -> localidad.getFechaBaja() == null)
-            .sorted(Comparator.comparing(localidad -> localidad.getDescripcionLocalidad()))
-            .map(localidad -> model.map(localidad, LocalidadDTO.class))
-            .collect(Collectors.toList()))
-            .orElseThrow(Exception::new);
-
-    */
 
 }

@@ -13,7 +13,4 @@ public interface ProcessDtoService<E, ID extends Serializable> {
     List<E> listarInactivos(Pageable pageable) throws Exception;
 
     List<E> listarTodos(Pageable pageable) throws Exception;
-
-    List<E> listar(Page page) throws Exception;
-
 }

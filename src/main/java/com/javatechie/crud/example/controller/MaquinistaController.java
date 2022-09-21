@@ -2,6 +2,7 @@ package com.javatechie.crud.example.controller;
 
 import com.javatechie.crud.example.service.Impl.process.MaquinistaProcessServiceImpl;
 import com.javatechie.crud.example.entity.Maquinista;
+import com.javatechie.crud.example.service.interfaz.Busqueda;
 import com.javatechie.crud.example.utils.constantes.Constant;
 import com.javatechie.crud.example.utils.processDto.impl.MaquinistaProcessListServiceImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,25 +15,18 @@ import javax.annotation.security.RolesAllowed;
 @RequestMapping("/maquinista")
 @RestController
 public class MaquinistaController {
-
     private MaquinistaProcessServiceImpl maquinistaProcessService;
-
+    private Busqueda busqueda;
     private MaquinistaProcessListServiceImpl maquinistaProcessDtoService;
 
     public MaquinistaController(MaquinistaProcessServiceImpl maquinistaProcessService,
-                                MaquinistaProcessListServiceImpl maquinistaProcessDtoService) {
+                                Busqueda busqueda, MaquinistaProcessListServiceImpl maquinistaProcessDtoService) {
         this.maquinistaProcessService = maquinistaProcessService;
+        this.busqueda = busqueda;
         this.maquinistaProcessDtoService = maquinistaProcessDtoService;
     }
 
 
-    /**
-     * crea un maquinista verificando que el legajo no se encuentre em la base de datos.
-     *
-     * @param entity
-     * @param adminId
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PostMapping("/create")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -44,14 +38,6 @@ public class MaquinistaController {
         }
     }
 
-    /**
-     * Modifica la entidad User, antes de eso comprueba que los campos celular mail o legajo no esten repetidos.
-     * Luego setea los campos fechaMod, horaMod con los datos actuales del sistema y el campo usuarioMod.
-     *
-     * @param id
-     * @param entity
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @PutMapping("/update/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -64,12 +50,7 @@ public class MaquinistaController {
         }
     }
 
-    /**
-     * Desactiva el User.
-     *
-     * @param id
-     * @return
-     */
+
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @DeleteMapping("/inactive/{id}")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR})
@@ -81,12 +62,6 @@ public class MaquinistaController {
         }
     }
 
-    /**
-     * Retorna un maquinista segun el ID.
-     *
-     * @param id
-     * @return
-     */
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
@@ -112,9 +87,9 @@ public class MaquinistaController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/nombre")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public ResponseEntity<?> getMaquinistaNombre(@RequestParam String nombre) {
+    public ResponseEntity<?> getMaquinistaNombre(Pageable pageable, @RequestParam String nombre) {
         try {
-            return null;
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarMaquinistaPorNombre(pageable, nombre));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -123,9 +98,9 @@ public class MaquinistaController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/apellido")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public ResponseEntity<?> getMaquinistaApellido(@RequestParam String apellido) {
+    public ResponseEntity<?> getMaquinistaApellido(Pageable pageable, @RequestParam String apellido) {
         try {
-            return null;
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarMaquinistaPorApellido(pageable, apellido));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -134,9 +109,9 @@ public class MaquinistaController {
     @CrossOrigin(allowCredentials = "true", origins = "*", allowedHeaders = "*")
     @GetMapping("/legajo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer id) {
+    public ResponseEntity<?> getMaquinistaLegajo(@RequestParam Integer legajo) {
         try {
-            return null;
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarMaquinistaPorLegajo(legajo));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

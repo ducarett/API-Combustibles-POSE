@@ -1,8 +1,9 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
 import com.javatechie.crud.example.entity.Provincia;
 import com.javatechie.crud.example.repository.InterfaceBaseRepository;
 import com.javatechie.crud.example.repository.ProvinciaRepository;
+import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

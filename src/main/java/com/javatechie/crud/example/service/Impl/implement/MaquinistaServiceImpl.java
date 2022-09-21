@@ -1,5 +1,6 @@
-package com.javatechie.crud.example.service.Impl;
+package com.javatechie.crud.example.service.Impl.implement;
 
+import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.MaquinistaService;
 import com.javatechie.crud.example.utils.complete.impl.CompletarCamposMaquinista;
 import com.javatechie.crud.example.entity.Maquinista;
@@ -68,9 +69,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Maquinista getEntity(Integer id) throws Exception {
         try {
-            Maquinista maquinista = getById(id);
-            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
-            return maquinista;
+            return getEntity(getById(id));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -79,9 +78,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Page<Maquinista> listActivos(Pageable pageable) throws Exception {
         try {
-            Page<Maquinista> maquinistas = maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable);
-            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
-            return maquinistas;
+            return listGeneric(maquinistaRepository.findByFechaBajaIsNullAndHoraBajaIsNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -90,9 +87,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Page<Maquinista> listInactivos(Pageable pageable) throws Exception {
         try {
-            Page<Maquinista> maquinistas = maquinistaRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable);
-            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
-            return maquinistas;
+            return listGeneric(maquinistaRepository.findByFechaBajaIsNotNullAndHoraBajaIsNotNull(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -101,9 +96,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Page<Maquinista> listAllMaquinistas(Pageable pageable) throws Exception {
         try {
-            Page<Maquinista> maquinistas = maquinistaRepository.findAll(pageable);
-            if (maquinistas.isEmpty()) throw new Exception(NO_EXIST);
-            return maquinistas;
+            return listGeneric(maquinistaRepository.findAll(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -112,9 +105,7 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
     @Override
     public Maquinista getByLegajo(Integer legajo) throws Exception {
         try {
-            Maquinista maquinista = maquinistaRepository.findByLegajo(legajo);
-            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
-            return maquinista;
+            return getEntity(maquinistaRepository.findByLegajo(legajo));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -122,22 +113,18 @@ public class MaquinistaServiceImpl extends BaseServiceImpl<Maquinista, Integer> 
 
 
     @Override
-    public Maquinista getByNombre(String nombre) throws Exception {
+    public Page<Maquinista> getByNombre(Pageable pageable, String nombre) throws Exception {
         try {
-            Maquinista maquinista = maquinistaRepository.findByNombre(nombre);
-            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
-            return maquinista;
+            return listGeneric(maquinistaRepository.findByNombre(pageable, nombre));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public Maquinista getByApellido(String apellido) throws Exception {
+    public Page<Maquinista> getByApellido(Pageable pageable, String apellido) throws Exception {
         try {
-            Maquinista maquinista = maquinistaRepository.findByApellido(apellido);
-            if (Objects.isNull(maquinista)) throw new Exception(NO_EXIST);
-            return maquinista;
+            return listGeneric(maquinistaRepository.findByApellido(pageable, apellido));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

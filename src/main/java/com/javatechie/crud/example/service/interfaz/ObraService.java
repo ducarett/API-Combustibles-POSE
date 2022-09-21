@@ -1,6 +1,5 @@
 package com.javatechie.crud.example.service.interfaz;
 
-import com.javatechie.crud.example.dto.ObraDTO;
 import com.javatechie.crud.example.entity.Obra;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +22,15 @@ public interface ObraService extends BaseService<Obra, Integer> {
 
     Page<Obra> listActivos(Pageable pageable) throws Exception;
 
-   /* List<ObraDTO> listProvincia(String provincia, Pageable pageable) throws Exception;
+    Page<Obra> listProvincia(String provincia, Pageable pageable) throws Exception;
 
-    List<ObraDTO> listDescripcion(String descripcion, Pageable pageable) throws Exception;
+    Page<Obra> listDescripcion(String descripcion, Pageable pageable) throws Exception;
 
-    List<ObraDTO> listLocalidad(String localidad, Pageable pageable) throws Exception;
+    Page<Obra> listLocalidad(String localidad, Pageable pageable) throws Exception;
 
-    List<ObraDTO> listGerente(String gerente, Pageable pageable) throws Exception;
+    Page<Obra> listGerente(String gerente, Pageable pageable) throws Exception;
 
-    List<ObraDTO> listJefe(String jefe, Pageable pageable) throws Exception;
+    Page<Obra> listJefe(String jefe, Pageable pageable) throws Exception;
 
-    List<ObraDTO> listAdministrativo(String administrativo, Pageable pageable) throws Exception; */
+    Page<Obra> listAdministrativo(String administrativo, Pageable pageable) throws Exception;
 }

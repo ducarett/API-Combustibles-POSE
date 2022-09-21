@@ -2,7 +2,6 @@ package com.javatechie.crud.example.utils.mapperDto;
 
 import com.javatechie.crud.example.dto.MaquinistaDTO;
 import com.javatechie.crud.example.entity.Maquinista;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +11,12 @@ import java.util.List;
 @Service
 public class MapperMaquinistasDTO {
 
-    ModelMapper modelMapper = new ModelMapper();
-
-    public MaquinistaDTO mapper(Maquinista maquinista){
-        return modelMapper.map(maquinista, MaquinistaDTO.class);
-    }
-
-    public List<MaquinistaDTO> mapperDtoConsultaMaquinistas(Page<Maquinista> entities) throws Exception {
+    public static List<MaquinistaDTO> mapperDtoMaquinistas(Page<Maquinista> entities) throws Exception {
         try {
             List<MaquinistaDTO> entitiesDto = new ArrayList<>();
             entities.stream().forEach(entity -> {
                 try {
-                    entitiesDto.add(mapperActivoinactivo(entity));
+                    entitiesDto.add(mapper(entity));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -34,17 +27,7 @@ public class MapperMaquinistasDTO {
         }
     }
 
-    public List<MaquinistaDTO> mapperDtoMaquinistaActivo(Page<Maquinista> entities) throws Exception {
-        try {
-            List<MaquinistaDTO> entitiesDto = new ArrayList<>();
-            entities.stream().forEach(entity -> entitiesDto.add(modelMapper.map(entity, MaquinistaDTO.class)));
-            return entitiesDto;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    private MaquinistaDTO mapperActivoinactivo(Maquinista entity) throws Exception {
+    public static MaquinistaDTO mapper(Maquinista entity) throws Exception {
         try {
             MaquinistaDTO dto = MaquinistaDTO.builder()
                     .id(entity.getMaquinistaId())

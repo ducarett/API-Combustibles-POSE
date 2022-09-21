@@ -15,7 +15,6 @@ import java.util.Optional;
 @Service
 public class CompleteCamposUsuarios {
     private UsuarioRepository usuarioRepository;
-
     private Encriptacion encriptacion;
 
     public CompleteCamposUsuarios(UsuarioRepository usuarioRepository, Encriptacion encriptacion) {
@@ -77,11 +76,11 @@ public class CompleteCamposUsuarios {
     }
 
     public boolean comprobarLegajo(Integer legajo) {
-        return usuarioRepository.findByLegajo(legajo) != null ? true : false;
+        return usuarioRepository.findByLegajo(legajo) != null;
     }
 
     public boolean comprobarCelular(Long celular) {
-        return !usuarioRepository.findByCelular(celular).isEmpty() ? true : false;
+        return usuarioRepository.findByCelular(celular) != null;
     }
 
     public boolean verificarDatosEnBase(Usuario usuario) throws Exception {

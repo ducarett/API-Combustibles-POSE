@@ -3,6 +3,7 @@ package com.javatechie.crud.example.utils.metodo;
 import com.javatechie.crud.example.dto.LocalidadDTO;
 import com.javatechie.crud.example.entity.Localidad;
 import com.javatechie.crud.example.entity.Usuario;
+import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class MetodosLocalidadUtils {
      * @return
      * @throws Exception
      */
-    public Page<LocalidadDTO> ordenarProvicnciasAlfabeticamente(Page<Localidad> entities) throws Exception {
+    public List<LocalidadDTO> ordenarProvicnciasAlfabeticamente(Page<Localidad> entities) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
 
         String[] provincias = new String[]{"BUENOS AIRES", "CIUDAD AUTONOMA DE BUENOS AIRES", "CATAMARCA", "CHACO", "CHUBUT", "CORDOBA", "CORRIENTES", "ENTRE RIOS", "FORMOSA", "JUJUY", "LA PAMPA",
@@ -40,26 +41,19 @@ public class MetodosLocalidadUtils {
                 listProvincias.add(localidadAlfabeticamente(prov));
             }
         }
-        Page<LocalidadDTO> page = (Page<LocalidadDTO>) listProvincias.stream()
+        List<LocalidadDTO> lista = listProvincias.stream()
                 .flatMap(List::stream)
                 .map(e -> modelMapper.map(e, LocalidadDTO.class))
                 .collect(Collectors.toList());
-        if (page.isEmpty()) throw new Exception("Error al ordenar localidades");
-        return page;
+        if (CollectionUtils.isEmpty(lista)) throw new Exception("Error al ordenar localidades");
+        return lista;
         //return listProvincias.stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
-    /**
-     * ordena alfabeticamente las localidades de una lista
-     *
-     * @param entities
-     * @return
-     */
     public List<Localidad> localidadAlfabeticamente(List<Localidad> entities) {
         return entities.stream()
                 .sorted(Comparator.comparing(e -> e.getDescripcionLocalidad()))
                 .peek(e -> e.setDescripcionLocalidad(e.getDescripcionLocalidad().toUpperCase()))
                 .collect(Collectors.toList());
-
     }
 }

@@ -13,24 +13,19 @@ import java.util.List;
 
 @Service
 public class LocalidadProcesListServiceImpl implements ProcessDtoService<LocalidadDTO, Integer> {
-
-    private final static String NO_EXIST = "No se encontro ninguna localidad";
     private LocalidadService localidadService;
-    private MapperLocalidadesDTO mapperLocalidadesDTO;
     private MetodosLocalidadUtils metodosLocalidadUtils;
 
 
-    public LocalidadProcesListServiceImpl(LocalidadService localidadService, MapperLocalidadesDTO mapperLocalidadesDTO,
-                                          MetodosLocalidadUtils metodosLocalidadUtils) {
+    public LocalidadProcesListServiceImpl(LocalidadService localidadService, MetodosLocalidadUtils metodosLocalidadUtils) {
         this.localidadService = localidadService;
-        this.mapperLocalidadesDTO = mapperLocalidadesDTO;
         this.metodosLocalidadUtils = metodosLocalidadUtils;
     }
 
     @Override
     public List<LocalidadDTO> listarActivos(Pageable pageable) throws Exception {
         try {
-            return listar(localidadService.listActivos(pageable));
+            return MapperLocalidadesDTO.mapperDtoLocalidades(localidadService.listActivos(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -39,7 +34,7 @@ public class LocalidadProcesListServiceImpl implements ProcessDtoService<Localid
     @Override
     public List<LocalidadDTO> listarInactivos(Pageable pageable) throws Exception {
         try {
-            return listar(localidadService.listInactivos(pageable));
+            return MapperLocalidadesDTO.mapperDtoLocalidades(localidadService.listInactivos(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -48,8 +43,7 @@ public class LocalidadProcesListServiceImpl implements ProcessDtoService<Localid
     @Override
     public List<LocalidadDTO> listarTodos(Pageable pageable) throws Exception {
         try {
-            Page<LocalidadDTO> page = metodosLocalidadUtils.ordenarProvicnciasAlfabeticamente(localidadService.listAllObras(pageable));
-            return listar(page);
+            return metodosLocalidadUtils.ordenarProvicnciasAlfabeticamente(localidadService.listAllObras(pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -57,22 +51,9 @@ public class LocalidadProcesListServiceImpl implements ProcessDtoService<Localid
 
     public List<LocalidadDTO> listLocalidadesProvId(Integer id, Pageable pageable) throws Exception {
         try {
-            return listar(localidadService.listarLocalidadesPorProvId(id, pageable));
+            return MapperLocalidadesDTO.mapperDtoLocalidades(localidadService.listarLocalidadesPorProvId(id, pageable));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
-
-
-    @Override
-    public List<LocalidadDTO> listar(Page page) throws Exception {
-        try {
-            if (page.isEmpty()) throw new Exception(NO_EXIST);
-            return mapperLocalidadesDTO.mapperDtoLocalidad(page);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-
 }
