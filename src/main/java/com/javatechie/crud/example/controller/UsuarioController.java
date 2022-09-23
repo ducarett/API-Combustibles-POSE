@@ -144,9 +144,9 @@ public class UsuarioController {
 
     @GetMapping("/search/userName")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public ResponseEntity<?> searchForLogin(@RequestParam String userName) throws Exception {
+    public ResponseEntity<?> searchForLogin(Pageable pageable, @RequestParam String userName) throws Exception {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorUserName(userName));
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorUserName(pageable, userName));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

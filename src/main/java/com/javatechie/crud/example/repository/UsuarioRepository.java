@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Integer> {
+    @Query(value = "Select p From Usuario p where p.login = :login")
+    Page<Usuario> findListLogin(Pageable pageable, @Param("login") String login);
 
     Usuario findByLogin(String login);
 

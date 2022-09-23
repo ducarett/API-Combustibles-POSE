@@ -2,6 +2,7 @@ package com.javatechie.crud.example.service.Impl.implement;
 
 import java.util.Objects;
 
+import com.javatechie.crud.example.dto.UsuarioDTO;
 import com.javatechie.crud.example.service.Impl.abstractClass.BaseServiceImpl;
 import com.javatechie.crud.example.service.interfaz.Encriptacion;
 import com.javatechie.crud.example.service.interfaz.UsuarioService;
@@ -40,6 +41,15 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
         usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword().toUpperCase()));
         return save(completeCamposUsuarios.verificarDatosEnBase(usuario) ?
                 completeCamposUsuarios.usuarioCamposAlta(usuario, adminId) : new Usuario());
+    }
+
+    @Override
+    public Usuario getPorLogin(String login) throws Exception {
+        try {
+            return getEntity(usuarioRepository.findByLogin(login));
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Override
@@ -120,9 +130,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     }
 
     @Override
-    public Usuario getPorLogin(String user) throws Exception {
+    public Page<Usuario> getListPorLogin(Pageable pageable, String userName) throws Exception {
         try {
-            return getEntity(usuarioRepository.findByLogin(user));
+            return listGeneric(usuarioRepository.findListLogin(pageable, userName));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

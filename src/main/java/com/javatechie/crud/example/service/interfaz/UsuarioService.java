@@ -11,13 +11,15 @@ import org.springframework.security.core.parameters.P;
 import java.util.List;
 
 public interface UsuarioService extends BaseService<Usuario, Integer> {
-    Page<Usuario> buscarPorLegajo(Pageable pageable,Integer legajo) throws Exception;
+    Page<Usuario> buscarPorLegajo(Pageable pageable, Integer legajo) throws Exception;
 
     Page<Usuario> listAllUsuarios(Pageable pageable) throws Exception;
 
     Usuario crearUsuario(Usuario usuario, Integer adminId) throws Exception;
 
     Usuario getPorLogin(String login) throws Exception;
+
+    Page<Usuario> getListPorLogin(Pageable pageable, String login) throws Exception;
 
     Usuario getUsuario(Integer id) throws Exception;
 

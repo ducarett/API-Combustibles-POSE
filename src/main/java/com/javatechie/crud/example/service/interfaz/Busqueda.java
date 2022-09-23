@@ -32,6 +32,8 @@ public interface Busqueda {
 
     UsuarioDTO buscarPorUserName(String userName) throws Exception;
 
+    List<UsuarioDTO> buscarPorUserName(Pageable pageable, String userName) throws Exception;
+
     List<ObraDTO> buscarObraPorJefe(Pageable pageable, String jefe) throws Exception;
 
     List<ObraDTO> buscarObraPorGerente(Pageable pageable, String gerente) throws Exception;

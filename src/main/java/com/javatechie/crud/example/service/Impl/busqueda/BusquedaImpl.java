@@ -117,6 +117,15 @@ public class BusquedaImpl implements Busqueda {
     }
 
     @Override
+    public List<UsuarioDTO> buscarPorUserName(Pageable pageable, String userName) throws Exception {
+        try {
+            return MapperUsuariosDTO.mapperDtoUsuarios(usuarioService.getListPorLogin(pageable, userName));
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
     public List<ObraDTO> buscarObraPorJefe(Pageable pageable, String jefe) throws Exception {
         try {
             return MapperObrasDTO.mapperDtoObras(obraService.listJefe(jefe, pageable));
