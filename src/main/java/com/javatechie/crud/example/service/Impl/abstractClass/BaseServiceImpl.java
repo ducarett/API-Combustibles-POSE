@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class BaseServiceImpl<E, ID extends Serializable> implements BaseService<E, ID> {
 
     private static final String NO_HUBO_RESULTADOS = "No hubo resultados";
-    private static final String NO_EXIST = "No existe este elemento!";
+    private static final String NO_EXIST = "No existe este usuario!";
     protected InterfaceBaseRepository<E, ID> interfaceBaseRepository;
 
     public BaseServiceImpl(InterfaceBaseRepository<E, ID> interfaceBaseRepository) {
