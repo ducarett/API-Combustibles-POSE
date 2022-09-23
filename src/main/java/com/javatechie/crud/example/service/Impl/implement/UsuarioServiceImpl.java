@@ -39,7 +39,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
         usuario.setLogin(metodosUsuariosUtils.crearUserName(usuario.getNombre(), usuario.getApellido()));
         usuario.setPassword(encriptacion.encriptarClave(usuario.getPassword().toUpperCase()));
         return save(completeCamposUsuarios.verificarDatosEnBase(usuario) ?
-        completeCamposUsuarios.usuarioCamposAlta(usuario, adminId) : new Usuario());
+                completeCamposUsuarios.usuarioCamposAlta(usuario, adminId) : new Usuario());
     }
 
     @Override
@@ -111,9 +111,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
     }
 
     @Override
-    public Usuario buscarPorLegajo(Integer legajo) throws Exception {
+    public Page<Usuario> buscarPorLegajo(Pageable pageable, Integer legajo) throws Exception {
         try {
-            return getEntity(usuarioRepository.findByLegajo(legajo));
+            return listGeneric(usuarioRepository.findByListLegajo(pageable, legajo));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

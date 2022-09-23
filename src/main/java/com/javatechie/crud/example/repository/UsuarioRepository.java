@@ -50,6 +50,9 @@ public interface UsuarioRepository extends InterfaceBaseRepository<Usuario, Inte
                                    @Param("apellido") String apellido, @Param("userName") String userName,
                                    @Param("legajo") Integer legajo, @Param("cargo") String cargo);
 
+    @Query(value = "Select p From Usuario p where p.legajo = :legajo")
+    Page<Usuario> findByListLegajo(Pageable pageable, @Param("legajo") Integer legajo);
+
     Usuario findByLegajo(Integer legajo);
 
     Page<Usuario> findByFechaBajaIsNullAndHoraBajaIsNull(Pageable pageable);

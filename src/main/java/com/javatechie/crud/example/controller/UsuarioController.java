@@ -132,7 +132,6 @@ public class UsuarioController {
         }
     }
 
-
     @GetMapping("/search/cargo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
@@ -156,9 +155,9 @@ public class UsuarioController {
 
     @GetMapping("/search/legajo")
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
-    public ResponseEntity<?> searchForlegajo(@RequestParam Integer legajo) throws Exception {
+    public ResponseEntity<?> searchForlegajo(Pageable pageable, @RequestParam Integer legajo) throws Exception {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorLegajo(legajo));
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorLegajo(pageable, legajo));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

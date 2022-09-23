@@ -4,10 +4,14 @@ import com.javatechie.crud.example.dto.UsuarioDTO;
 import com.javatechie.crud.example.entity.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
 public interface UsuarioService extends BaseService<Usuario, Integer> {
+    Page<Usuario> buscarPorLegajo(Pageable pageable,Integer legajo) throws Exception;
 
     Page<Usuario> listAllUsuarios(Pageable pageable) throws Exception;
 
@@ -22,8 +26,6 @@ public interface UsuarioService extends BaseService<Usuario, Integer> {
     Page<Usuario> listarPorApellido(String apellido, Pageable pageable) throws Exception;
 
     Page<Usuario> listarPorCargo(String cargo, Pageable pageable) throws Exception;
-
-    Usuario buscarPorLegajo(Integer legajo) throws Exception;
 
     boolean bajaUsuario(Integer id, Integer adminId) throws Exception;
 

@@ -24,7 +24,7 @@ public interface Busqueda {
 
     List<MaquinistaDTO> buscarMaquinistaPorApellido(Pageable pageable, String apellido) throws Exception;
 
-    UsuarioDTO buscarPorLegajo(Integer legajo) throws Exception;
+    List<UsuarioDTO> buscarPorLegajo(Pageable pageable, Integer legajo) throws Exception;
 
     MaquinistaDTO buscarMaquinistaPorLegajo(Integer legajo) throws Exception;
 

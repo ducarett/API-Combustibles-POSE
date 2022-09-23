@@ -81,9 +81,9 @@ public class BusquedaImpl implements Busqueda {
     }
 
     @Override
-    public UsuarioDTO buscarPorLegajo(Integer legajo) throws Exception {
+    public List<UsuarioDTO> buscarPorLegajo(Pageable pageable, Integer legajo) throws Exception {
         try {
-            return MapperUsuariosDTO.mapperDtoUsuario(usuarioService.buscarPorLegajo(legajo));
+            return MapperUsuariosDTO.mapperDtoUsuarios(usuarioService.buscarPorLegajo(pageable, legajo));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
