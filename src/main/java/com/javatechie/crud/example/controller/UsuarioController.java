@@ -136,7 +136,7 @@ public class UsuarioController {
     @RolesAllowed({Constant.ROL_ADMINISTRADOR, Constant.ROL_ADMINISTRATIVO})
     public ResponseEntity<?> searchForCargo(@RequestParam String position, Pageable pageable) throws Exception {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorCargo(pageable, position));
+            return ResponseEntity.status(HttpStatus.OK).body(busqueda.buscarPorTipoDeTarea(pageable, position));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

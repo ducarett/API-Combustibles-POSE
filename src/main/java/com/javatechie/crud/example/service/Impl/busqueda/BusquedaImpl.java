@@ -99,7 +99,7 @@ public class BusquedaImpl implements Busqueda {
     }
 
     @Override
-    public List<UsuarioDTO> buscarPorCargo(Pageable pageable, String cargo) throws Exception {
+    public List<UsuarioDTO> buscarPorTipoDeTarea(Pageable pageable, String cargo) throws Exception {
         try {
             return MapperUsuariosDTO.mapperDtoUsuarios(usuarioService.listarPorCargo(cargo, pageable));
         } catch (Exception e) {
